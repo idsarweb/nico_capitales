@@ -252,7 +252,20 @@ export default function MapView({ mode = 'study' }: MapViewProps) {
         <TileLayer
           attribution='&copy; <a href="https://carto.com/">CartoDB</a>'
           url={theme === 'dark' ? DARK_TILE_URL : LIGHT_TILE_URL}
-        >
+        />
+
+        {allCountries.map((c) => (
+          <CircleMarker
+            key={`capital-${c.iso}`}
+            center={c.coordinates}
+            radius={3}
+            pathOptions={{
+              fillColor: REGION_COLORS[c.region],
+              color: theme === 'dark' ? '#ffffff' : '#1e293b',
+              weight: 1,
+              fillOpacity: 0.9,
+            }}
+          >
             {isStudy && (
               <Popup>
                 <strong>{c.name}</strong>

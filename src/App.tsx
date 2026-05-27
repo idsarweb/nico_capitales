@@ -5,7 +5,6 @@ import {
   Route,
   Navigate,
   useLocation,
-  useNavigate,
 } from 'react-router-dom';
 import { AnimatePresence, motion } from 'framer-motion';
 import { allCountries } from './data/countries';
@@ -35,7 +34,6 @@ function PageTransition({ children }: { children: React.ReactNode }) {
 }
 
 function ResumeModal() {
-  const navigate = useNavigate();
   const location = useLocation();
   const { t } = useTranslation();
   const { phase, resetQuiz, questions } = useAppStore();

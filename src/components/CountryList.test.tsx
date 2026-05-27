@@ -11,12 +11,24 @@ const mockSelectedRegions = [
   'south-america',
 ] as const;
 
+vi.mock('../i18n', () => ({
+  useTranslation: () => ({
+    t: (key: string) => key,
+    language: 'en',
+    setLanguage: vi.fn(),
+    getPrompt: vi.fn(),
+  }),
+  LanguageProvider: ({ children }: any) => children,
+}));
+
 vi.mock('../store', () => ({
   useAppStore: (selector: any) =>
     selector({
       includeTerritories: mockIncludeTerritories,
       selectedRegions: mockSelectedRegions,
       onCountryClick: mockOnCountryClick,
+      language: 'en',
+      setLanguage: vi.fn(),
     }),
 }));
 
