@@ -3,15 +3,21 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { useAppStore } from '../../store';
 import { useTranslation } from '../../i18n';
 import { allCountries } from '../../data/countries';
-import MapView from '../map/MapView';
+import ClickOnMap from '../quiz/question-types/ClickOnMap';
+import TextInput from '../quiz/question-types/TextInput';
+import MultipleChoice from '../quiz/question-types/MultipleChoice';
+import type { QuestionType } from '../../types';
+
+const ALL_TYPES: QuestionType[] = ['click-on-map', 'text-input', 'multiple-choice'];
 
 export default function PracticePage() {
   const { t, getPrompt } = useTranslation();
-  const { startQuiz, phase, currentIndex, questions, nextQuestion, skipQuestion } =
+  const { startQuiz, phase, currentIndex, questions, nextQuestion, skipQuestion, questionTypes, setQuestionTypes } =
     useAppStore();
 
   const [showHint, setShowHint] = useState(false);
   const [feedback, setFeedback] = useState<'correct' | 'wrong' | null>(null);
+  const [started, setStarted] = useState(false);
 
   const currentQuestion = questions[currentIndex];
 
@@ -19,11 +25,25 @@ export default function PracticePage() {
     return allCountries.filter((c) => !c.territory);
   }, []);
 
+  const toggleType = (type: QuestionType) => {
+    const has = questionTypes.includes(type);
+    const next = has
+      ? questionTypes.filter((t) => t !== type)
+      : [...questionTypes, type];
+    setQuestionTypes(next);
+  };
+
+  const handleStart = () => {
+    if (questionTypes.length === 0) return;
+    startQuiz('practice', filteredCountries, 5, questionTypes);
+    setStarted(true);
+  };
+
   useEffect(() => {
     if (phase === 'idle') {
-      startQuiz('practice', filteredCountries, 5);
+      setStarted(false);
     }
-  }, [phase, startQuiz, filteredCountries]);
+  }, [phase]);
 
   useEffect(() => {
     if (phase === 'correct') {
@@ -113,27 +133,106 @@ export default function PracticePage() {
         </AnimatePresence>
       </div>
 
-      {/* Map */}
+      {/* Content area */}
       <div className="relative flex-1">
-        <MapView mode="practice" />
-      </div>
+        <AnimatePresence mode="wait">
+          {phase === 'idle' && !started && (
+            <motion.div
+              key="selector"
+              initial={{ opacity: 0, y: 12 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -12 }}
+              className="flex h-full items-center justify-center"
+            >
+              <div className="flex flex-col items-center gap-6 px-4">
+                <p className="text-lg font-semibold text-slate-800 dark:text-slate-100">
+                  {t('quiz.selectTypes')}
+                </p>
+                <div className="flex flex-wrap items-center justify-center gap-3">
+                  {ALL_TYPES.map((type) => {
+                    const active = questionTypes.includes(type);
+                    const labels: Record<QuestionType, string> = {
+                      'click-on-map': t('quiz.typeMap'),
+                      'text-input': t('quiz.typeText'),
+                      'multiple-choice': t('quiz.typeChoice'),
+                    };
+                    return (
+                      <button
+                        key={type}
+                        type="button"
+                        onClick={() => toggleType(type)}
+                        className={`rounded-full px-5 py-2 text-sm font-bold transition ${
+                          active
+                            ? 'bg-gradient-to-r from-teal-400 to-emerald-400 text-slate-900 shadow-lg'
+                            : 'border border-slate-300 bg-transparent text-slate-600 hover:bg-slate-100 dark:border-slate-600 dark:text-slate-300 dark:hover:bg-slate-800'
+                        }`}
+                      >
+                        {labels[type]}
+                      </button>
+                    );
+                  })}
+                </div>
+                <button
+                  type="button"
+                  onClick={handleStart}
+                  disabled={questionTypes.length === 0}
+                  className="rounded-xl bg-gradient-to-r from-teal-400 to-emerald-400 px-8 py-3 text-sm font-bold text-slate-900 shadow-lg transition hover:shadow-xl disabled:opacity-50"
+                >
+                  {t('quiz.start')}
+                </button>
+              </div>
+            </motion.div>
+          )}
 
-      {/* Next button when answered wrong */}
-      {phase === 'wrong' && (
-        <div className="flex justify-center border-t border-white/10 bg-slate-800/90 px-6 py-3">
-          <button
-            type="button"
-            onClick={() => {
-              nextQuestion();
-              setFeedback(null);
-              setShowHint(false);
-            }}
-            className="rounded-xl bg-gradient-to-r from-teal-400 to-emerald-400 px-8 py-2.5 text-sm font-bold text-slate-900 shadow-lg transition hover:shadow-xl"
-          >
-            {t('quiz.next')}
-          </button>
-        </div>
-      )}
+          {currentQuestion && (
+            <motion.div
+              key={currentQuestion.id}
+              initial={{ opacity: 0, x: 20 }}
+              animate={{ opacity: 1, x: 0 }}
+              exit={{ opacity: 0, x: -20 }}
+              transition={{ duration: 0.25 }}
+              className="h-full"
+            >
+              {currentQuestion.type === 'click-on-map' && (
+                <div className="flex h-full flex-col">
+                  <div className="flex-1">
+                    <ClickOnMap question={currentQuestion} />
+                  </div>
+                </div>
+              )}
+
+              {currentQuestion.type === 'text-input' && (
+                <div className="flex h-full flex-col items-center justify-center">
+                  <TextInput question={currentQuestion} />
+                </div>
+              )}
+
+              {currentQuestion.type === 'multiple-choice' && (
+                <div className="flex h-full flex-col items-center justify-center">
+                  <MultipleChoice question={currentQuestion} />
+                </div>
+              )}
+            </motion.div>
+          )}
+        </AnimatePresence>
+
+        {/* Next button when answered wrong */}
+        {phase === 'wrong' && (
+          <div className="flex justify-center border-t border-white/10 bg-slate-800/90 px-6 py-3">
+            <button
+              type="button"
+              onClick={() => {
+                nextQuestion();
+                setFeedback(null);
+                setShowHint(false);
+              }}
+              className="rounded-xl bg-gradient-to-r from-teal-400 to-emerald-400 px-8 py-2.5 text-sm font-bold text-slate-900 shadow-lg transition hover:shadow-xl"
+            >
+              {t('quiz.next')}
+            </button>
+          </div>
+        )}
+      </div>
 
       {/* Feedback overlay */}
       <AnimatePresence>

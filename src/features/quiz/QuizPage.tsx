@@ -8,6 +8,9 @@ import { useTimer } from '../../hooks/useTimer';
 import ClickOnMap from './question-types/ClickOnMap';
 import TextInput from './question-types/TextInput';
 import MultipleChoice from './question-types/MultipleChoice';
+import type { QuestionType } from '../../types';
+
+const ALL_TYPES: QuestionType[] = ['click-on-map', 'text-input', 'multiple-choice'];
 
 export default function QuizPage() {
   const navigate = useNavigate();
@@ -21,6 +24,8 @@ export default function QuizPage() {
     recordAnswers,
     addHighScore,
     skipQuestion,
+    questionTypes,
+    setQuestionTypes,
   } = useAppStore();
 
   const [started, setStarted] = useState(false);
@@ -33,12 +38,19 @@ export default function QuizPage() {
     }
   }, [phase]);
 
-  useEffect(() => {
-    if (!started && phase === 'idle') {
-      startQuiz('quiz', filteredCountries, 10);
-      setStarted(true);
-    }
-  }, [started, phase, startQuiz, filteredCountries]);
+  const handleStart = () => {
+    if (questionTypes.length === 0) return;
+    startQuiz('quiz', filteredCountries, 10, questionTypes);
+    setStarted(true);
+  };
+
+  const toggleType = (type: QuestionType) => {
+    const has = questionTypes.includes(type);
+    const next = has
+      ? questionTypes.filter((t) => t !== type)
+      : [...questionTypes, type];
+    setQuestionTypes(next);
+  };
 
   const currentQuestion = questions[currentIndex];
 
@@ -143,6 +155,54 @@ export default function QuizPage() {
       {/* Question area */}
       <div className="flex-1">
         <AnimatePresence mode="wait">
+          {phase === 'idle' && !started && (
+            <motion.div
+              key="selector"
+              initial={{ opacity: 0, y: 12 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -12 }}
+              className="flex h-full items-center justify-center"
+            >
+              <div className="flex flex-col items-center gap-6 px-4">
+                <p className="text-lg font-semibold text-slate-800 dark:text-slate-100">
+                  {t('quiz.selectTypes')}
+                </p>
+                <div className="flex flex-wrap items-center justify-center gap-3">
+                  {ALL_TYPES.map((type) => {
+                    const active = questionTypes.includes(type);
+                    const labels: Record<QuestionType, string> = {
+                      'click-on-map': t('quiz.typeMap'),
+                      'text-input': t('quiz.typeText'),
+                      'multiple-choice': t('quiz.typeChoice'),
+                    };
+                    return (
+                      <button
+                        key={type}
+                        type="button"
+                        onClick={() => toggleType(type)}
+                        className={`rounded-full px-5 py-2 text-sm font-bold transition ${
+                          active
+                            ? 'bg-gradient-to-r from-rose-500 to-orange-500 text-white shadow-lg'
+                            : 'border border-slate-300 bg-transparent text-slate-600 hover:bg-slate-100 dark:border-slate-600 dark:text-slate-300 dark:hover:bg-slate-800'
+                        }`}
+                      >
+                        {labels[type]}
+                      </button>
+                    );
+                  })}
+                </div>
+                <button
+                  type="button"
+                  onClick={handleStart}
+                  disabled={questionTypes.length === 0}
+                  className="rounded-xl bg-gradient-to-r from-rose-500 to-orange-500 px-8 py-3 text-sm font-bold text-white shadow-lg transition hover:shadow-xl disabled:opacity-50"
+                >
+                  {t('quiz.start')}
+                </button>
+              </div>
+            </motion.div>
+          )}
+
           {currentQuestion && (
             <motion.div
               key={currentQuestion.id}

@@ -28,6 +28,7 @@ export const useAppStore = create<AppStore>()(
         theme: state.theme,
         mapView: state.mapView,
         selectedRegions: state.selectedRegions,
+        questionTypes: state.questionTypes,
       }),
     }
   )

@@ -33,7 +33,12 @@
     "points": "points",
     "timeRemaining": "Time remaining",
     "region": "Region: {region}",
-    "practice": "Practice"
+    "practice": "Practice",
+    "selectTypes": "Select question types",
+    "typeMap": "Map",
+    "typeText": "Written",
+    "typeChoice": "Multiple Choice",
+    "start": "Start"
   },
   "study": {
     "capital": "Capital",

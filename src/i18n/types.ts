@@ -36,6 +36,11 @@ export interface TranslationSection {
     timeRemaining: string;
     region: string;
     practice: string;
+    selectTypes: string;
+    typeMap: string;
+    typeText: string;
+    typeChoice: string;
+    start: string;
   };
   study: {
     capital: string;

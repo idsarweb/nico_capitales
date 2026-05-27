@@ -1,5 +1,5 @@
 import type { StateCreator } from 'zustand';
-import type { Region } from '../types';
+import type { Region, QuestionType } from '../types';
 import type { Language } from '../i18n/types';
 
 export type MapViewMode = 'map' | 'list';
@@ -10,6 +10,7 @@ export interface UISlice {
   theme: 'light' | 'dark';
   mapView: MapViewMode;
   language: Language;
+  questionTypes: QuestionType[];
 
   // Actions
   setIncludeTerritories: (value: boolean) => void;
@@ -17,6 +18,7 @@ export interface UISlice {
   setTheme: (theme: 'light' | 'dark') => void;
   setMapView: (view: MapViewMode) => void;
   setLanguage: (lang: Language) => void;
+  setQuestionTypes: (types: QuestionType[]) => void;
 }
 
 export const createUISlice: StateCreator<UISlice, [], [], UISlice> = (set) => ({
@@ -30,6 +32,7 @@ export const createUISlice: StateCreator<UISlice, [], [], UISlice> = (set) => ({
   theme: 'light',
   mapView: 'map',
   language: 'es',
+  questionTypes: ['click-on-map', 'text-input', 'multiple-choice'],
 
   setIncludeTerritories: (value) => set({ includeTerritories: value }),
 
@@ -45,4 +48,5 @@ export const createUISlice: StateCreator<UISlice, [], [], UISlice> = (set) => ({
   setTheme: (theme) => set({ theme }),
   setMapView: (view) => set({ mapView: view }),
   setLanguage: (language) => set({ language }),
+  setQuestionTypes: (questionTypes) => set({ questionTypes }),
 });
