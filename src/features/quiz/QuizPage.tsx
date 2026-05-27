@@ -63,7 +63,7 @@ export default function QuizPage() {
   useEffect(() => {
     if (phase === 'complete') {
       const total = recordAnswers(answers);
-      const correctFirstTry = answers.filter((a) => a.correct).length;
+      const correctFirstTry = answers.filter((a) => a.correct && a.attempts <= 1).length;
       const bestStreak = useAppStore.getState().bestStreak;
       const avgSpeedMs =
         answers.length > 0

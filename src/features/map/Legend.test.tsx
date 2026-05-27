@@ -1,6 +1,24 @@
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect, vi } from 'vitest';
 import { render, screen } from '@testing-library/react';
 import { Legend } from './Legend';
+
+vi.mock('../../i18n', () => ({
+  useTranslation: () => ({
+    t: (key: string) => {
+      const map: Record<string, string> = {
+        'map.regions': 'Regions',
+        'map.northAmerica': 'North America',
+        'map.centralAmerica': 'Central America',
+        'map.caribbean': 'Caribbean',
+        'map.southAmerica': 'South America',
+      };
+      return map[key] || key;
+    },
+    language: 'en' as const,
+    setLanguage: () => {},
+    getPrompt: () => '',
+  }),
+}));
 
 describe('Legend', () => {
   it('renders 4 regions with correct labels', () => {

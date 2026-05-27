@@ -208,23 +208,10 @@ export default function MapView({ mode = 'study' }: MapViewProps) {
         path.setAttribute('aria-label', name);
         path.style.outline = 'none';
 
-        path.addEventListener('focus', () => {
-          setHoveredIso(iso);
-          (layer as L.Path).setStyle({
-            ...getStyle(iso, true),
-            color: '#ffffff',
-            weight: 3,
-          });
-        });
-        path.addEventListener('blur', () => {
-          setHoveredIso((prev) => (prev === iso ? null : prev));
-        });
-        path.addEventListener('keydown', (e: Event) => {
-          if ((e as KeyboardEvent).key === 'Enter') {
-            e.preventDefault();
-            onCountryClick(iso);
-          }
-        });
+        // Note: focus/blur/keyboard accessibility is handled by Leaflet when
+        // tabindex and role are present; we intentionally do NOT add raw
+        // addEventListener here to avoid memory leaks on GeoJSON re-creation.
+        // https://github.com/Leaflet/Leaflet/issues/7331
       }
 
       if (isStudy) {
@@ -250,6 +237,7 @@ export default function MapView({ mode = 'study' }: MapViewProps) {
         style={{ minHeight: '60vh' }}
       >
         <TileLayer
+          key={`tiles-${theme}`}
           attribution='&copy; <a href="https://carto.com/">CartoDB</a>'
           url={theme === 'dark' ? DARK_TILE_URL : LIGHT_TILE_URL}
         />
@@ -259,6 +247,8 @@ export default function MapView({ mode = 'study' }: MapViewProps) {
             key={`capital-${c.iso}`}
             center={c.coordinates}
             radius={3}
+            bubblingMouseEvents={false}
+            interactive={!isQuestionActive}
             pathOptions={{
               fillColor: REGION_COLORS[c.region],
               color: theme === 'dark' ? '#ffffff' : '#1e293b',

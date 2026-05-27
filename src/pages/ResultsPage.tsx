@@ -1,4 +1,4 @@
-import { useEffect, useState, useMemo } from 'react';
+import { useEffect, useState, useMemo, useRef } from 'react';
 import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import { useAppStore } from '../store';
@@ -10,8 +10,17 @@ export default function ResultsPage() {
   const { t } = useTranslation();
   const { highScores, resetQuiz, quizzesCompleted } = useAppStore();
 
-  const latest = highScores[highScores.length - 1];
+  const latest = useMemo(
+    () =>
+      highScores.reduce(
+        (a, b) => (a.date > b.date ? a : b),
+        highScores[0]
+      ),
+    [highScores]
+  );
+
   const { fire } = useConfetti();
+  const stopConfetti = useRef<(() => void) | null>(null);
 
   const [animatedScore, setAnimatedScore] = useState(0);
 
@@ -27,8 +36,11 @@ export default function ResultsPage() {
 
   useEffect(() => {
     if (latest && isCelebration) {
-      fire();
+      stopConfetti.current = fire();
     }
+    return () => {
+      stopConfetti.current?.();
+    };
   }, [latest, isCelebration, fire]);
 
   useEffect(() => {

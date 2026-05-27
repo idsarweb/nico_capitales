@@ -11,7 +11,9 @@ export interface QuizSlice {
   answers: AnswerRecord[];
   startTime: number | null;
   questionStartTime: number | null;
-  language: 'es' | 'en';
+
+  // Optional injected actions
+  resetStreak?: () => void;
 
   // Actions
   startQuiz: (mode: QuizMode, pool: Country[], questionCount?: number) => void;
@@ -65,7 +67,6 @@ export const createQuizSlice: StateCreator<QuizSlice, [], [], QuizSlice> = (set,
   answers: [],
   startTime: null,
   questionStartTime: null,
-  language: 'es',
 
   startQuiz: (mode, pool, questionCount = 10) => {
     const questions = buildQuestions(pool, questionCount);
@@ -80,6 +81,7 @@ export const createQuizSlice: StateCreator<QuizSlice, [], [], QuizSlice> = (set,
       startTime: Date.now(),
       questionStartTime: Date.now(),
     });
+    (get() as unknown as { resetStreak?: () => void }).resetStreak?.();
   },
 
   answerQuestion: (iso: string) => {
@@ -93,19 +95,33 @@ export const createQuizSlice: StateCreator<QuizSlice, [], [], QuizSlice> = (set,
     const correct = iso === q.iso;
     const timeMs = questionStartTime ? Date.now() - questionStartTime : 0;
 
-    const record: AnswerRecord = {
-      questionId: q.id,
-      iso: q.iso,
-      correct,
-      attempts: 1,
-      timeMs,
-      score: 0, // computed by scoresSlice later
-    };
+    let nextAnswers: AnswerRecord[];
+    const existingIndex = answers.findIndex((a) => a.questionId === q.id);
+
+    if (isPracticeRetry && existingIndex !== -1) {
+      nextAnswers = answers.map((a, i) =>
+        i === existingIndex
+          ? { ...a, correct, attempts: a.attempts + 1, timeMs }
+          : a
+      );
+    } else {
+      nextAnswers = [
+        ...answers,
+        {
+          questionId: q.id,
+          iso: q.iso,
+          correct,
+          attempts: 1,
+          timeMs,
+          score: 0, // computed by scoresSlice later
+        },
+      ];
+    }
 
     set({
       phase: correct ? 'correct' : 'wrong',
       selectedCountry: iso,
-      answers: [...answers, record],
+      answers: nextAnswers,
     });
   },
 

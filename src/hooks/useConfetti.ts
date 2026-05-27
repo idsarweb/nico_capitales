@@ -5,6 +5,7 @@ export function useConfetti() {
   const fire = useCallback(() => {
     const duration = 3000;
     const end = Date.now() + duration;
+    let rafId: number;
 
     const frame = () => {
       confetti({
@@ -23,11 +24,12 @@ export function useConfetti() {
       });
 
       if (Date.now() < end) {
-        requestAnimationFrame(frame);
+        rafId = requestAnimationFrame(frame);
       }
     };
 
-    requestAnimationFrame(frame);
+    rafId = requestAnimationFrame(frame);
+    return () => cancelAnimationFrame(rafId);
   }, []);
 
   const fireMild = useCallback(() => {

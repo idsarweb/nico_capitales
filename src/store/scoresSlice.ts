@@ -11,6 +11,7 @@ export interface ScoresSlice {
   // Actions
   recordAnswers: (answers: AnswerRecord[]) => number; // returns total score
   addHighScore: (entry: ScoreEntry) => void;
+  resetStreak: () => void;
   resetProgress: () => void;
 }
 
@@ -65,8 +66,12 @@ export const createScoresSlice: StateCreator<ScoresSlice, [], [], ScoresSlice> =
   addHighScore: (entry) => {
     set((state) => ({
       quizzesCompleted: state.quizzesCompleted + 1,
-      highScores: [...state.highScores, entry].sort((a, b) => b.score - a.score).slice(0, 20),
+      highScores: [...state.highScores, entry].sort((a, b) => a.score - b.score).slice(-20),
     }));
+  },
+
+  resetStreak: () => {
+    set({ currentStreak: 0 });
   },
 
   resetProgress: () => {

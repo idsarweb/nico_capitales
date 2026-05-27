@@ -21,10 +21,13 @@ export const useAppStore = create<AppStore>()(
       partialize: (state) => ({
         quizzesCompleted: state.quizzesCompleted,
         highScores: state.highScores,
-        currentStreak: state.currentStreak,
         bestStreak: state.bestStreak,
         answersHistory: state.answersHistory,
         language: state.language,
+        includeTerritories: state.includeTerritories,
+        theme: state.theme,
+        mapView: state.mapView,
+        selectedRegions: state.selectedRegions,
       }),
     }
   )

@@ -81,6 +81,8 @@ export interface TranslationSection {
     bestStreakLabel: string;
     avgSpeedLabel: string;
     pointsLabel: string;
+    lightMode: string;
+    darkMode: string;
   };
 }
 

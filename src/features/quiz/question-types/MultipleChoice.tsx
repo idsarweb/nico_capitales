@@ -15,6 +15,9 @@ export default function MultipleChoice({ question }: { question: Question }) {
   const phase = useAppStore((s) => s.phase);
 
   const options = useMemo(() => {
+    if (question.options && question.options.length >= 4) {
+      return question.options;
+    }
     const correct = allCountries.find((c) => c.iso === question.iso);
     const sameRegion = allCountries.filter(
       (c) => c.region === correct?.region && c.iso !== question.iso
@@ -25,7 +28,7 @@ export default function MultipleChoice({ question }: { question: Question }) {
       .map((c) => c.name);
     const pool = [correct?.name ?? '', ...distractors];
     return pool.sort(() => Math.random() - 0.5);
-  }, [question.iso]);
+  }, [question.iso, question.options]);
 
   const correctName = useMemo(() => {
     return allCountries.find((c) => c.iso === question.iso)?.name ?? '';

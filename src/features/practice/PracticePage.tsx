@@ -94,7 +94,7 @@ export default function PracticePage() {
               onClick={skipQuestion}
               className="rounded-full bg-slate-600/50 px-3 py-1 text-xs font-semibold text-slate-300 transition hover:bg-slate-500/50 hover:text-white"
             >
-              Skip
+              {t('quiz.skip')}
             </button>
           )}
         </div>
