@@ -1,0 +1,36 @@
+schema: spec-driven
+
+context: |
+  Project: nico — Geography Quiz Web App (Americas countries & capitals)
+  Stack recommendation:
+    - Vite + React 18 + TypeScript (SPA bundler + UI library)
+    - React Router v6 (routing for study / quiz / practice modes)
+    - Leaflet + react-leaflet (interactive animated map)
+    - Framer Motion (animations / transitions)
+    - Vitest + React Testing Library + Playwright (testing)
+    - ESLint + Prettier + TypeScript strict mode (quality)
+  Architecture: feature-based folder structure inside src/
+  Testing: strict_tdd disabled until test runner is configured
+
+rules:
+  proposal:
+    - Include rollback plan for risky changes
+  specs:
+    - Use Given/When/Then for scenarios
+    - Use RFC 2119 keywords (MUST, SHALL, SHOULD, MAY)
+  design:
+    - Include sequence diagrams for complex flows
+    - Document architecture decisions with rationale
+  tasks:
+    - Group by phase, use hierarchical numbering
+    - Keep tasks completable in one session
+  apply:
+    - Follow existing code patterns
+    tdd: false
+    test_command: ""
+  verify:
+    test_command: ""
+    build_command: "npm run build"
+    coverage_threshold: 0
+  archive:
+    - Warn before merging destructive deltas
