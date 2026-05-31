@@ -113,6 +113,17 @@ export default function QuizPage() {
         </div>
 
         <div className="flex items-center gap-3">
+          {/* Terminar */}
+          {started && phase !== 'idle' && (
+            <button
+              type="button"
+              onClick={() => useAppStore.getState().resetQuiz()}
+              className="rounded-lg bg-rose-500/20 px-3 py-1 text-xs font-semibold text-rose-400 transition hover:bg-rose-500/30"
+            >
+              {t('quiz.finish')}
+            </button>
+          )}
+
           {/* Timer */}
           <div
             className={`rounded-md px-3 py-1 text-sm font-bold ${

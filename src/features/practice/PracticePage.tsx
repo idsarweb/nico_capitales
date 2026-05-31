@@ -12,7 +12,7 @@ const ALL_TYPES: QuestionType[] = ['click-on-map', 'text-input', 'multiple-choic
 
 export default function PracticePage() {
   const { t, getPrompt } = useTranslation();
-  const { startQuiz, phase, currentIndex, questions, nextQuestion, skipQuestion, questionTypes, setQuestionTypes } =
+  const { startQuiz, phase, currentIndex, questions, answers, nextQuestion, skipQuestion, questionTypes, setQuestionTypes, resetQuiz } =
     useAppStore();
 
   const [showHint, setShowHint] = useState(false);
@@ -66,6 +66,15 @@ export default function PracticePage() {
   }, [phase, nextQuestion]);
 
 
+  const stats = useMemo(() => {
+    if (answers.length === 0) return null;
+    const total = questions.length;
+    const correct = answers.filter((a) => a.correct).length;
+    const firstTry = answers.filter((a) => a.correct && a.attempts <= 1).length;
+    const avgSpeedMs = answers.reduce((sum, a) => sum + a.timeMs, 0) / answers.length;
+    return { correct, total, firstTry, avgSpeedMs };
+  }, [answers, questions.length]);
+
   const hint = useMemo(() => {
     if (!currentQuestion) return null;
     const country = allCountries.find((c) => c.iso === currentQuestion.iso);
@@ -87,6 +96,15 @@ export default function PracticePage() {
             {Math.min(currentIndex + 1, questions.length)} / {questions.length}
           </span>
         </div>
+        {started && phase !== 'idle' && (
+          <button
+            type="button"
+            onClick={() => resetQuiz()}
+            className="rounded-lg bg-rose-500/20 px-3 py-1 text-xs font-semibold text-rose-400 transition hover:bg-rose-500/30"
+          >
+            {t('quiz.finish')}
+          </button>
+        )}
         <div className="h-2 w-32 overflow-hidden rounded-full bg-slate-700/50">
           <motion.div
             className="h-full bg-gradient-to-r from-teal-400 to-emerald-400"
@@ -232,23 +250,80 @@ export default function PracticePage() {
         </AnimatePresence>
 
         {/* Completion screen */}
-        {phase === 'complete' && (
-          <div className="flex h-full items-center justify-center">
-            <div className="flex flex-col items-center gap-6 px-4">
-              <p className="text-2xl font-bold text-slate-800 dark:text-slate-100">
-                {t('results.quizComplete')}
-              </p>
-              <p className="text-sm text-slate-500 dark:text-slate-400">
-                {questions.length} / {questions.length}
-              </p>
-              <button
-                type="button"
-                onClick={() => useAppStore.getState().resetQuiz()}
-                className="rounded-xl bg-gradient-to-r from-teal-400 to-emerald-400 px-8 py-3 text-sm font-bold text-slate-900 shadow-lg transition hover:shadow-xl"
-              >
-                {t('quiz.finish')}
-              </button>
-            </div>
+        {phase === 'complete' && stats && (
+          <div className="flex h-full items-center justify-center px-4 py-10">
+            <motion.div
+              initial={{ opacity: 0, scale: 0.9 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ type: 'spring', stiffness: 200, damping: 20 }}
+              className="w-full max-w-md rounded-3xl border border-slate-200 bg-white/80 p-8 shadow-2xl backdrop-blur-xl dark:border-white/10 dark:bg-slate-800/80"
+            >
+              <div className="mb-4 text-center">
+                <motion.div
+                  initial={{ y: -20, opacity: 0 }}
+                  animate={{ y: 0, opacity: 1 }}
+                  transition={{ delay: 0.1 }}
+                  className="mx-auto mb-3 flex h-16 w-16 items-center justify-center rounded-full bg-gradient-to-br from-teal-400 to-emerald-400 text-3xl shadow-lg"
+                >
+                  📊
+                </motion.div>
+                <h2 className="text-center text-2xl font-extrabold text-slate-900 dark:text-white">
+                  {t('results.quizComplete')}
+                </h2>
+                <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">
+                  {t('quiz.practice')}
+                </p>
+              </div>
+
+              <div className="mt-8 grid grid-cols-2 gap-4">
+                <motion.div
+                  initial={{ opacity: 0, y: 12 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.3 }}
+                  className="rounded-xl border border-white/5 bg-slate-100 p-4 text-center dark:bg-slate-700/50"
+                >
+                  <div className="text-xl font-bold text-slate-800 dark:text-white">{stats.correct} / {stats.total}</div>
+                  <div className="text-xs font-medium text-slate-500 dark:text-slate-400">{t('general.questions')}</div>
+                </motion.div>
+                <motion.div
+                  initial={{ opacity: 0, y: 12 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.35 }}
+                  className="rounded-xl border border-white/5 bg-slate-100 p-4 text-center dark:bg-slate-700/50"
+                >
+                  <div className="text-xl font-bold text-green-600 dark:text-green-400">{stats.firstTry}</div>
+                  <div className="text-xs font-medium text-slate-500 dark:text-slate-400">{t('general.firstTryLabel')}</div>
+                </motion.div>
+                <motion.div
+                  initial={{ opacity: 0, y: 12 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.4 }}
+                  className="rounded-xl border border-white/5 bg-slate-100 p-4 text-center dark:bg-slate-700/50"
+                >
+                  <div className="text-xl font-bold text-slate-800 dark:text-white">{Math.round(stats.avgSpeedMs / 1000)}s</div>
+                  <div className="text-xs font-medium text-slate-500 dark:text-slate-400">{t('general.avgSpeedLabel')}</div>
+                </motion.div>
+                <motion.div
+                  initial={{ opacity: 0, y: 12 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.45 }}
+                  className="rounded-xl border border-white/5 bg-slate-100 p-4 text-center dark:bg-slate-700/50"
+                >
+                  <div className="text-xl font-bold text-slate-800 dark:text-white">{stats.total}</div>
+                  <div className="text-xs font-medium text-slate-500 dark:text-slate-400">{t('general.questions')}</div>
+                </motion.div>
+              </div>
+
+              <div className="mt-8 flex flex-col gap-3">
+                <button
+                  type="button"
+                  onClick={() => resetQuiz()}
+                  className="w-full rounded-xl bg-gradient-to-r from-teal-400 to-emerald-400 py-3 text-sm font-bold text-slate-900 shadow-lg transition hover:shadow-xl"
+                >
+                  {t('quiz.finish')}
+                </button>
+              </div>
+            </motion.div>
           </div>
         )}
 
