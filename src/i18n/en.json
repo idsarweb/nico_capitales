@@ -38,7 +38,9 @@
     "typeMap": "Map",
     "typeText": "Written",
     "typeChoice": "Multiple Choice",
-    "start": "Start"
+    "start": "Start",
+    "questionCount": "Number of questions",
+    "finish": "Finish"
   },
   "study": {
     "capital": "Capital",

@@ -18,12 +18,14 @@ export default function PracticePage() {
   const [showHint, setShowHint] = useState(false);
   const [feedback, setFeedback] = useState<'correct' | 'wrong' | null>(null);
   const [started, setStarted] = useState(false);
+  const [questionCount, setQuestionCount] = useState(5);
 
   const currentQuestion = questions[currentIndex];
 
   const filteredCountries = useMemo(() => {
     return allCountries.filter((c) => !c.territory);
   }, []);
+  const maxQuestions = filteredCountries.length;
 
   const toggleType = (type: QuestionType) => {
     const has = questionTypes.includes(type);
@@ -35,7 +37,7 @@ export default function PracticePage() {
 
   const handleStart = () => {
     if (questionTypes.length === 0) return;
-    startQuiz('practice', filteredCountries, 5, questionTypes);
+    startQuiz('practice', filteredCountries, questionCount, questionTypes);
     setStarted(true);
   };
 
@@ -172,6 +174,19 @@ export default function PracticePage() {
                     );
                   })}
                 </div>
+                <div className="flex items-center gap-3">
+                  <label className="text-sm text-slate-600 dark:text-slate-300">
+                    {t('quiz.questionCount')}
+                  </label>
+                  <input
+                    type="number"
+                    min={1}
+                    max={maxQuestions}
+                    value={questionCount}
+                    onChange={(e) => setQuestionCount(Math.min(maxQuestions, Math.max(1, Number(e.target.value))))}
+                    className="w-20 rounded-lg border border-slate-300 bg-white px-3 py-1.5 text-center text-sm font-semibold text-slate-800 dark:border-slate-600 dark:bg-slate-700 dark:text-slate-100"
+                  />
+                </div>
                 <button
                   type="button"
                   onClick={handleStart}
@@ -215,6 +230,27 @@ export default function PracticePage() {
             </motion.div>
           )}
         </AnimatePresence>
+
+        {/* Completion screen */}
+        {phase === 'complete' && (
+          <div className="flex h-full items-center justify-center">
+            <div className="flex flex-col items-center gap-6 px-4">
+              <p className="text-2xl font-bold text-slate-800 dark:text-slate-100">
+                {t('results.quizComplete')}
+              </p>
+              <p className="text-sm text-slate-500 dark:text-slate-400">
+                {questions.length} / {questions.length}
+              </p>
+              <button
+                type="button"
+                onClick={() => useAppStore.getState().resetQuiz()}
+                className="rounded-xl bg-gradient-to-r from-teal-400 to-emerald-400 px-8 py-3 text-sm font-bold text-slate-900 shadow-lg transition hover:shadow-xl"
+              >
+                {t('quiz.finish')}
+              </button>
+            </div>
+          </div>
+        )}
 
         {/* Next button when answered wrong */}
         {phase === 'wrong' && (

@@ -41,6 +41,8 @@ export interface TranslationSection {
     typeText: string;
     typeChoice: string;
     start: string;
+    questionCount: string;
+    finish: string;
   };
   study: {
     capital: string;

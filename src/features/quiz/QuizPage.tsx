@@ -29,8 +29,10 @@ export default function QuizPage() {
   } = useAppStore();
 
   const [started, setStarted] = useState(false);
+  const [questionCount, setQuestionCount] = useState(10);
 
   const filteredCountries = allCountries.filter((c) => !c.territory);
+  const maxQuestions = filteredCountries.length;
 
   useEffect(() => {
     if (phase === 'idle') {
@@ -40,7 +42,7 @@ export default function QuizPage() {
 
   const handleStart = () => {
     if (questionTypes.length === 0) return;
-    startQuiz('quiz', filteredCountries, 10, questionTypes);
+    startQuiz('quiz', filteredCountries, questionCount, questionTypes);
     setStarted(true);
   };
 
@@ -190,6 +192,19 @@ export default function QuizPage() {
                       </button>
                     );
                   })}
+                </div>
+                <div className="flex items-center gap-3">
+                  <label className="text-sm text-slate-600 dark:text-slate-300">
+                    {t('quiz.questionCount')}
+                  </label>
+                  <input
+                    type="number"
+                    min={1}
+                    max={maxQuestions}
+                    value={questionCount}
+                    onChange={(e) => setQuestionCount(Math.min(maxQuestions, Math.max(1, Number(e.target.value))))}
+                    className="w-20 rounded-lg border border-slate-300 bg-white px-3 py-1.5 text-center text-sm font-semibold text-slate-800 dark:border-slate-600 dark:bg-slate-700 dark:text-slate-100"
+                  />
                 </div>
                 <button
                   type="button"
