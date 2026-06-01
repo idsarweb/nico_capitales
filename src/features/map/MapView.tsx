@@ -153,13 +153,15 @@ export default function MapView({ mode = 'study' }: MapViewProps) {
 
       return {
         fillColor,
-        weight: isTarget ? 3.5 : isSelected ? 2.5 : 1.5,
-        opacity: 1,
+        weight: isTarget ? 3.5 : isSelected ? 1.8 : 1.5,
+        opacity: isSelected ? 0.6 : 1,
         color: isTarget
           ? '#fbbf24'
-          : isSelected || isHovered
-            ? '#ffffff'
-            : '#475569',
+          : isSelected
+            ? '#94a3b8'
+            : isHovered
+              ? '#ffffff'
+              : '#475569',
         dashArray: isTarget ? undefined : '3',
         fillOpacity,
       } as L.PathOptions;
