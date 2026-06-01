@@ -56,8 +56,8 @@ describe('Integration: map click → dispatch → targetCountry update', () => {
 describe('Integration: mode transitions', () => {
   it('shows mode tabs and can navigate', async () => {
     render(<LanguageProvider><App /></LanguageProvider>);
-    expect(screen.getByRole('link', { name: /Práctica/i })).toBeInTheDocument();
-    expect(screen.getByRole('link', { name: /Quiz/i })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: /Práctica/i })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: /Quiz/i })).toBeInTheDocument();
   });
 });
 
