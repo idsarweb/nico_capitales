@@ -52,7 +52,7 @@ export default function StudyPage() {
                 </p>
                 <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">
                   {t('study.region')}: <span className="font-medium text-slate-700 dark:text-slate-200">
-                    {country.region.replace(/-/g, ' ').replace(/\b\w/g, (l) => l.toUpperCase())}
+                    {t(`map.${country.region}` as const)}
                   </span>
                 </p>
                 <p className="mt-3 text-sm leading-relaxed text-slate-600 dark:text-slate-300">
