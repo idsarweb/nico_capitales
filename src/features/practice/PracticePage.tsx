@@ -11,11 +11,42 @@ import type { QuestionType } from '../../types';
 const ALL_TYPES: QuestionType[] = ['click-on-map', 'text-input', 'multiple-choice'];
 
 function maskText(text: string, maskWords: string[]): string {
-  return maskWords.reduce((acc, word) => {
-    const escaped = word.replace(/[-/\\^$*+?.()|[\]{}]/g, '\\$&');
-    const regex = new RegExp(escaped, 'gi');
-    return acc.replace(regex, '*****');
-  }, text);
+  const allTerms = new Set<string>();
+
+  for (const word of maskWords) {
+    if (!word) continue;
+    allTerms.add(word);
+
+    // Variantes sin artículo y con artículos en ambos idiomas
+    const withoutArticle = word.replace(/^(The|Las|Los|La|El)\s+/i, '');
+    if (withoutArticle !== word) {
+      ['', 'The ', 'Las ', 'Los ', 'La ', 'El '].forEach((prefix) => allTerms.add(prefix + withoutArticle));
+    }
+
+    // Primera palabra (para "Mexico City", buscar solo "Mexico")
+    if (word.includes(' ')) {
+      const first = word.split(' ')[0];
+      if (first.length > 3) allTerms.add(first);
+    }
+
+    // Parte antes de coma (para "Washington, D.C.")
+    if (word.includes(',')) {
+      allTerms.add(word.split(',')[0]);
+    }
+  }
+
+  // Ordenar de más largo a más corto para evitar reemplazos parciales
+  const sorted = Array.from(allTerms)
+    .filter((t) => t.length >= 2)
+    .sort((a, b) => b.length - a.length);
+
+  let result = text;
+  for (const term of sorted) {
+    const escaped = term.replace(/[-/\\^$*+?.()|[\]{}]/g, '\\$&');
+    result = result.replace(new RegExp(escaped, 'gi'), '*****');
+  }
+
+  return result;
 }
 
 export default function PracticePage() {
