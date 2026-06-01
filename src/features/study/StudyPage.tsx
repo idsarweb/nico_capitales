@@ -1,7 +1,7 @@
 import { useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useAppStore } from '../../store';
-import { useTranslation } from '../../i18n';
+import { useTranslation, getCountryNames } from '../../i18n';
 import { allCountries } from '../../data/countries';
 import MapView from '../map/MapView';
 import CountryList from '../../components/CountryList';
@@ -16,6 +16,8 @@ export default function StudyPage() {
     if (!selectedCountry) return null;
     return allCountries.find((c) => c.iso === selectedCountry) ?? null;
   }, [selectedCountry]);
+
+  const countryNames = country ? getCountryNames(country, language) : null;
 
   return (
     <div className="relative flex h-screen flex-col">
@@ -43,10 +45,10 @@ export default function StudyPage() {
               </div>
               <div className="flex-1">
                 <h3 className="text-lg font-bold text-slate-800 dark:text-white">
-                  {country.name}
+                  {countryNames?.name ?? country.name}
                 </h3>
                 <p className="text-sm text-slate-500 dark:text-slate-400">
-                  {t('study.capital')}: <span className="font-medium text-slate-700 dark:text-slate-200">{country.capital}</span>
+                  {t('study.capital')}: <span className="font-medium text-slate-700 dark:text-slate-200">{countryNames?.capital ?? country.capital}</span>
                 </p>
                 <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">
                   {t('study.region')}: <span className="font-medium text-slate-700 dark:text-slate-200">

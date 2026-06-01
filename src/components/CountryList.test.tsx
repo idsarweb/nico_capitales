@@ -19,6 +19,10 @@ vi.mock('../i18n', () => ({
     getPrompt: vi.fn(),
   }),
   LanguageProvider: ({ children }: any) => children,
+  getCountryNames: (country: any, lang: string) => ({
+    name: lang === 'es' && country.nameEs ? country.nameEs : country.name,
+    capital: lang === 'es' && country.capitalEs ? country.capitalEs : country.capital,
+  }),
 }));
 
 vi.mock('../store', () => ({
@@ -34,9 +38,9 @@ vi.mock('../store', () => ({
 
 vi.mock('../data/countries', () => ({
   allCountries: [
-    { iso: 'AR', name: 'Argentina', capital: 'Buenos Aires', coordinates: [-34.6, -58.38], region: 'south-america', funFact: 'Aconcagua' },
-    { iso: 'BR', name: 'Brazil', capital: 'Brasília', coordinates: [-15.79, -47.88], region: 'south-america', funFact: 'World Cup' },
-    { iso: 'CA', name: 'Canada', capital: 'Ottawa', coordinates: [45.42, -75.69], region: 'north-america', funFact: 'Coastline' },
+    { iso: 'AR', name: 'Argentina', nameEs: 'Argentina', capital: 'Buenos Aires', capitalEs: 'Buenos Aires', coordinates: [-34.6, -58.38], region: 'south-america', funFact: 'Aconcagua' },
+    { iso: 'BR', name: 'Brazil', nameEs: 'Brasil', capital: 'Brasília', capitalEs: 'Brasilia', coordinates: [-15.79, -47.88], region: 'south-america', funFact: 'World Cup' },
+    { iso: 'CA', name: 'Canada', nameEs: 'Canadá', capital: 'Ottawa', capitalEs: 'Ottawa', coordinates: [45.42, -75.69], region: 'north-america', funFact: 'Coastline' },
   ],
 }));
 

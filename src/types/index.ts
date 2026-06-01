@@ -7,7 +7,9 @@ export type Region =
 export interface Country {
   iso: string;           // ISO 3166-1 alpha-2
   name: string;
+  nameEs?: string;
   capital: string;
+  capitalEs?: string;
   coordinates: [number, number]; // [lat, lng]
   region: Region;
   funFact: string;

@@ -1,5 +1,7 @@
 import type { StateCreator } from 'zustand';
 import type { Country, Question, QuizPhase, QuizMode, AnswerRecord, QuestionType } from '../types';
+import type { Language } from '../i18n/types';
+import { getCountryNames } from '../i18n/helpers';
 
 export interface QuizSlice {
   mode: QuizMode;
@@ -16,7 +18,7 @@ export interface QuizSlice {
   resetStreak?: () => void;
 
   // Actions
-  startQuiz: (mode: QuizMode, pool: Country[], questionCount?: number, enabledTypes?: QuestionType[]) => void;
+  startQuiz: (mode: QuizMode, pool: Country[], questionCount?: number, enabledTypes?: QuestionType[], language?: Language) => void;
   answerQuestion: (iso: string) => void;
   nextQuestion: () => void;
   skipQuestion: () => void;
@@ -24,7 +26,7 @@ export interface QuizSlice {
   onCountryClick: (iso: string) => void;
 }
 
-function buildQuestions(pool: Country[], count: number, enabledTypes?: QuestionType[]): Question[] {
+function buildQuestions(pool: Country[], count: number, enabledTypes?: QuestionType[], language?: Language): Question[] {
   const allTypes: QuestionType[] = ['click-on-map', 'text-input', 'multiple-choice'];
   const types = enabledTypes && enabledTypes.length > 0 ? enabledTypes : allTypes;
 
@@ -33,10 +35,11 @@ function buildQuestions(pool: Country[], count: number, enabledTypes?: QuestionT
 
   return selected.map((c, i) => {
     const type = types[Math.floor(Math.random() * types.length)];
+    const names = getCountryNames(c, language ?? 'en');
     const promptMap: Record<string, string> = {
-      'click-on-map': `Click ${c.name} on the map`,
-      'text-input': `What is the capital of ${c.name}?`,
-      'multiple-choice': `Which country is ${c.capital} the capital of?`,
+      'click-on-map': `Click ${names.name} on the map`,
+      'text-input': `What is the capital of ${names.name}?`,
+      'multiple-choice': `Which country is ${names.capital} the capital of?`,
     };
 
     let options: string[] | undefined;
@@ -45,7 +48,7 @@ function buildQuestions(pool: Country[], count: number, enabledTypes?: QuestionT
         .filter((x) => x.iso !== c.iso)
         .sort(() => Math.random() - 0.5)
         .slice(0, 5);
-      options = [c.name, ...distractors.map((d) => d.name)].sort(() => Math.random() - 0.5);
+      options = [names.name, ...distractors.map((d) => getCountryNames(d, language ?? 'en').name)].sort(() => Math.random() - 0.5);
     }
 
     return {
@@ -70,8 +73,8 @@ export const createQuizSlice: StateCreator<QuizSlice, [], [], QuizSlice> = (set,
   startTime: null,
   questionStartTime: null,
 
-  startQuiz: (mode, pool, questionCount = 10, enabledTypes) => {
-    const questions = buildQuestions(pool, questionCount, enabledTypes);
+  startQuiz: (mode, pool, questionCount = 10, enabledTypes, language) => {
+    const questions = buildQuestions(pool, questionCount, enabledTypes, language);
     set({
       mode,
       questions,

@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useAppStore } from '../../store';
-import { useTranslation } from '../../i18n';
+import { useTranslation, getCountryNames } from '../../i18n';
 import { allCountries } from '../../data/countries';
 import ClickOnMap from '../quiz/question-types/ClickOnMap';
 import TextInput from '../quiz/question-types/TextInput';
@@ -51,8 +51,7 @@ function maskText(text: string, maskWords: string[]): string {
 
 export default function PracticePage() {
   const { t, getPrompt, language } = useTranslation();
-  const { startQuiz, phase, currentIndex, questions, answers, nextQuestion, skipQuestion, questionTypes, setQuestionTypes, resetQuiz } =
-    useAppStore();
+  const { startQuiz, phase, currentIndex, questions, answers, nextQuestion, skipQuestion, questionTypes, setQuestionTypes, resetQuiz } = useAppStore();
 
   const [showHint, setShowHint] = useState(false);
   const [feedback, setFeedback] = useState<'correct' | 'wrong' | null>(null);
@@ -76,7 +75,7 @@ export default function PracticePage() {
 
   const handleStart = () => {
     if (questionTypes.length === 0) return;
-    startQuiz('practice', filteredCountries, questionCount, questionTypes);
+    startQuiz('practice', filteredCountries, questionCount, questionTypes, language);
     setStarted(true);
   };
 
@@ -192,8 +191,9 @@ export default function PracticePage() {
             </p>
             <p className="mt-2 text-xs leading-relaxed text-slate-600 dark:text-slate-300">
               {(() => {
+                const hintNames = getCountryNames(hint, language);
                 const raw = (language === 'es' && hint.funFactEs) ? hint.funFactEs : hint.funFact;
-                return maskText(raw, [hint.name, hint.capital]);
+                return maskText(raw, [hintNames.name, hintNames.capital]);
               })()}
             </p>
           </motion.div>

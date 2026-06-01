@@ -1,12 +1,12 @@
 import { useState, useMemo, useCallback } from 'react';
 import { motion } from 'framer-motion';
 import { useAppStore } from '../../../store';
-import { useTranslation } from '../../../i18n';
+import { useTranslation, getCountryNames } from '../../../i18n';
 import { allCountries } from '../../../data/countries';
 import type { Question } from '../../../types';
 
 export default function TextInput({ question }: { question: Question }) {
-  const { t } = useTranslation();
+  const { t, language } = useTranslation();
   const [input, setInput] = useState('');
   const [showSuggestions, setShowSuggestions] = useState(false);
   const [shake, setShake] = useState(false);
@@ -19,16 +19,20 @@ export default function TextInput({ question }: { question: Question }) {
     return allCountries.find((c) => c.iso === question.iso);
   }, [question.iso]);
 
-  const correctCapital = targetCountry?.capital ?? '';
+  const targetNames = targetCountry ? getCountryNames(targetCountry, language) : null;
+  const correctCapital = targetNames?.capital ?? targetCountry?.capital ?? '';
 
   const suggestions = useMemo(() => {
     const term = input.trim().toLowerCase();
     if (!term || term.length < 1) return [];
     return allCountries
-      .filter((c) => c.capital.toLowerCase().startsWith(term))
-      .map((c) => c.capital)
+      .filter((c) => {
+        const cap = getCountryNames(c, language).capital;
+        return cap.toLowerCase().startsWith(term);
+      })
+      .map((c) => getCountryNames(c, language).capital)
       .slice(0, 5);
-  }, [input]);
+  }, [input, language]);
 
   const handleSubmit = useCallback(() => {
     if (phase !== 'question') return;

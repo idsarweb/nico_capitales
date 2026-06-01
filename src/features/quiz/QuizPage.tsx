@@ -14,7 +14,7 @@ const ALL_TYPES: QuestionType[] = ['click-on-map', 'text-input', 'multiple-choic
 
 export default function QuizPage() {
   const navigate = useNavigate();
-  const { t, getPrompt } = useTranslation();
+  const { t, getPrompt, language } = useTranslation();
   const {
     phase,
     currentIndex,
@@ -43,7 +43,7 @@ export default function QuizPage() {
 
   const handleStart = () => {
     if (questionTypes.length === 0) return;
-    startQuiz('quiz', filteredCountries, questionCount, questionTypes);
+    startQuiz('quiz', filteredCountries, questionCount, questionTypes, language);
     setStarted(true);
   };
 

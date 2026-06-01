@@ -1,12 +1,12 @@
 import { useState, useMemo } from 'react';
 import { motion } from 'framer-motion';
 import { useAppStore } from '../../../store';
-import { useTranslation } from '../../../i18n';
+import { useTranslation, getCountryNames } from '../../../i18n';
 import { allCountries } from '../../../data/countries';
 import type { Question } from '../../../types';
 
 export default function MultipleChoice({ question }: { question: Question }) {
-  const { t } = useTranslation();
+  const { t, language } = useTranslation();
   const [selected, setSelected] = useState<string | null>(null);
   const [shakeId, setShakeId] = useState<string | null>(null);
 
@@ -25,14 +25,15 @@ export default function MultipleChoice({ question }: { question: Question }) {
     const distractors = sameRegion
       .sort(() => Math.random() - 0.5)
       .slice(0, 3)
-      .map((c) => c.name);
-    const pool = [correct?.name ?? '', ...distractors];
+      .map((c) => getCountryNames(c, language).name);
+    const pool = [correct ? getCountryNames(correct, language).name : '', ...distractors];
     return pool.sort(() => Math.random() - 0.5);
-  }, [question.iso, question.options]);
+  }, [question.iso, question.options, language]);
 
   const correctName = useMemo(() => {
-    return allCountries.find((c) => c.iso === question.iso)?.name ?? '';
-  }, [question.iso]);
+    const c = allCountries.find((x) => x.iso === question.iso);
+    return c ? getCountryNames(c, language).name : '';
+  }, [question.iso, language]);
 
   const handleClick = (option: string) => {
     if (phase !== 'question') return;

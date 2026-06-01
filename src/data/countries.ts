@@ -6,6 +6,7 @@ export const countries: Country[] = [
   {
     iso: 'CA',
     name: 'Canada',
+    nameEs: 'Canadá',
     capital: 'Ottawa',
     coordinates: [45.42, -75.69],
     region: 'north-america',
@@ -15,7 +16,9 @@ export const countries: Country[] = [
   {
     iso: 'US',
     name: 'United States',
+    nameEs: 'Estados Unidos',
     capital: 'Washington, D.C.',
+    capitalEs: 'Washington D.C.',
     coordinates: [38.91, -77.04],
     region: 'north-america',
     funFact: 'The U.S. has the world\'s oldest written national constitution still in effect.',
@@ -24,7 +27,9 @@ export const countries: Country[] = [
   {
     iso: 'MX',
     name: 'Mexico',
+    nameEs: 'México',
     capital: 'Mexico City',
+    capitalEs: 'Ciudad de México',
     coordinates: [19.43, -99.13],
     region: 'north-america',
     funFact: 'Mexico City was built on the ruins of the Aztec capital Tenochtitlán.',
@@ -35,7 +40,9 @@ export const countries: Country[] = [
   {
     iso: 'GT',
     name: 'Guatemala',
+    nameEs: 'Guatemala',
     capital: 'Guatemala City',
+    capitalEs: 'Ciudad de Guatemala',
     coordinates: [14.63, -90.51],
     region: 'central-america',
     funFact: 'Guatemala is the birthplace of chocolate, first used by the Maya over 2,500 years ago.',
@@ -44,6 +51,7 @@ export const countries: Country[] = [
   {
     iso: 'BZ',
     name: 'Belize',
+    nameEs: 'Belice',
     capital: 'Belmopan',
     coordinates: [17.25, -88.77],
     region: 'central-america',
@@ -53,6 +61,7 @@ export const countries: Country[] = [
   {
     iso: 'HN',
     name: 'Honduras',
+    nameEs: 'Honduras',
     capital: 'Tegucigalpa',
     coordinates: [14.07, -87.21],
     region: 'central-america',
@@ -62,6 +71,7 @@ export const countries: Country[] = [
   {
     iso: 'SV',
     name: 'El Salvador',
+    nameEs: 'El Salvador',
     capital: 'San Salvador',
     coordinates: [13.69, -89.22],
     region: 'central-america',
@@ -71,6 +81,7 @@ export const countries: Country[] = [
   {
     iso: 'NI',
     name: 'Nicaragua',
+    nameEs: 'Nicaragua',
     capital: 'Managua',
     coordinates: [12.14, -86.25],
     region: 'central-america',
@@ -80,6 +91,7 @@ export const countries: Country[] = [
   {
     iso: 'CR',
     name: 'Costa Rica',
+    nameEs: 'Costa Rica',
     capital: 'San José',
     coordinates: [9.93, -84.09],
     region: 'central-america',
@@ -89,7 +101,9 @@ export const countries: Country[] = [
   {
     iso: 'PA',
     name: 'Panama',
+    nameEs: 'Panamá',
     capital: 'Panama City',
+    capitalEs: 'Ciudad de Panamá',
     coordinates: [8.98, -79.52],
     region: 'central-america',
     funFact: 'The Panama Canal reduces ship travel between the Atlantic and Pacific by about 8,000 nautical miles.',
@@ -100,7 +114,9 @@ export const countries: Country[] = [
   {
     iso: 'CU',
     name: 'Cuba',
+    nameEs: 'Cuba',
     capital: 'Havana',
+    capitalEs: 'La Habana',
     coordinates: [23.11, -82.37],
     region: 'caribbean',
     funFact: 'Cuba is the largest island in the Caribbean and has nine UNESCO World Heritage sites.',
@@ -109,7 +125,9 @@ export const countries: Country[] = [
   {
     iso: 'JM',
     name: 'Jamaica',
+    nameEs: 'Jamaica',
     capital: 'Kingston',
+    capitalEs: 'Kingston',
     coordinates: [17.98, -76.81],
     region: 'caribbean',
     funFact: 'Jamaica is home to Blue Mountain Peak, the highest point in the country at 2,256 meters.',
@@ -118,16 +136,20 @@ export const countries: Country[] = [
   {
     iso: 'HT',
     name: 'Haiti',
+    nameEs: 'Haití',
     capital: 'Port-au-Prince',
+    capitalEs: 'Puerto Príncipe',
     coordinates: [18.59, -72.31],
     region: 'caribbean',
     funFact: 'Haiti was the first independent nation of Latin America and the Caribbean after a successful slave revolt.',
-    funFactEs: 'Haiti fue la primera nación independiente de América Latina y el Caribe tras una exitosa revuelta de esclavos.',
+    funFactEs: 'Haití fue la primera nación independiente de América Latina y el Caribe tras una exitosa revuelta de esclavos.',
   },
   {
     iso: 'DO',
     name: 'Dominican Republic',
+    nameEs: 'República Dominicana',
     capital: 'Santo Domingo',
+    capitalEs: 'Santo Domingo',
     coordinates: [18.49, -69.93],
     region: 'caribbean',
     funFact: 'Santo Domingo is the oldest continuously inhabited European settlement in the Americas.',
@@ -136,7 +158,9 @@ export const countries: Country[] = [
   {
     iso: 'BS',
     name: 'The Bahamas',
+    nameEs: 'Bahamas',
     capital: 'Nassau',
+    capitalEs: 'Nasáu',
     coordinates: [25.03, -77.40],
     region: 'caribbean',
     funFact: 'The Bahamas has over 700 islands, but only about 30 are inhabited.',
@@ -145,7 +169,9 @@ export const countries: Country[] = [
   {
     iso: 'TT',
     name: 'Trinidad and Tobago',
+    nameEs: 'Trinidad y Tobago',
     capital: 'Port of Spain',
+    capitalEs: 'Puerto España',
     coordinates: [10.66, -61.52],
     region: 'caribbean',
     funFact: 'Trinidad and Tobago is the birthplace of steelpan, the only acoustic musical instrument invented in the 20th century.',
@@ -154,7 +180,9 @@ export const countries: Country[] = [
   {
     iso: 'BB',
     name: 'Barbados',
+    nameEs: 'Barbados',
     capital: 'Bridgetown',
+    capitalEs: 'Bridgetown',
     coordinates: [13.11, -59.61],
     region: 'caribbean',
     funFact: 'Barbados became the world\'s newest republic in 2021, replacing the British monarch as head of state.',
@@ -163,7 +191,9 @@ export const countries: Country[] = [
   {
     iso: 'LC',
     name: 'Saint Lucia',
+    nameEs: 'Santa Lucía',
     capital: 'Castries',
+    capitalEs: 'Castries',
     coordinates: [14.01, -60.99],
     region: 'caribbean',
     funFact: 'Saint Lucia is the only country in the world named after a woman (Saint Lucy of Syracuse).',
@@ -172,7 +202,9 @@ export const countries: Country[] = [
   {
     iso: 'VC',
     name: 'Saint Vincent and the Grenadines',
+    nameEs: 'San Vicente y las Granadinas',
     capital: 'Kingstown',
+    capitalEs: 'Kingstown',
     coordinates: [13.16, -61.22],
     region: 'caribbean',
     funFact: 'The Grenadines chain includes the tiny island of Mustique, famous as a celebrity retreat.',
@@ -181,7 +213,9 @@ export const countries: Country[] = [
   {
     iso: 'GD',
     name: 'Grenada',
+    nameEs: 'Granada',
     capital: 'St. George\'s',
+    capitalEs: 'Saint George',
     coordinates: [12.06, -61.75],
     region: 'caribbean',
     funFact: 'Grenada is known as the "Spice Isle" and produces a third of the world\'s nutmeg.',
@@ -190,7 +224,9 @@ export const countries: Country[] = [
   {
     iso: 'AG',
     name: 'Antigua and Barbuda',
+    nameEs: 'Antigua y Barbuda',
     capital: 'St. John\'s',
+    capitalEs: 'Saint John',
     coordinates: [17.12, -61.85],
     region: 'caribbean',
     funFact: 'Antigua has 365 beaches — one for every day of the year.',
@@ -199,7 +235,9 @@ export const countries: Country[] = [
   {
     iso: 'DM',
     name: 'Dominica',
+    nameEs: 'Dominica',
     capital: 'Roseau',
+    capitalEs: 'Roseau',
     coordinates: [15.30, -61.39],
     region: 'caribbean',
     funFact: 'Dominica is home to the second-largest boiling lake in the world.',
@@ -208,7 +246,9 @@ export const countries: Country[] = [
   {
     iso: 'KN',
     name: 'Saint Kitts and Nevis',
+    nameEs: 'San Cristóbal y Nieves',
     capital: 'Basseterre',
+    capitalEs: 'Basseterre',
     coordinates: [17.30, -62.72],
     region: 'caribbean',
     funFact: 'Saint Kitts and Nevis is the smallest sovereign state in the Western Hemisphere.',
@@ -219,7 +259,9 @@ export const countries: Country[] = [
   {
     iso: 'CO',
     name: 'Colombia',
+    nameEs: 'Colombia',
     capital: 'Bogotá',
+    capitalEs: 'Bogotá',
     coordinates: [4.71, -74.07],
     region: 'south-america',
     funFact: 'Colombia is the world\'s second most biodiverse country, after Brazil.',
@@ -228,7 +270,9 @@ export const countries: Country[] = [
   {
     iso: 'VE',
     name: 'Venezuela',
+    nameEs: 'Venezuela',
     capital: 'Caracas',
+    capitalEs: 'Caracas',
     coordinates: [10.48, -66.90],
     region: 'south-america',
     funFact: 'Venezuela is home to Angel Falls, the world\'s highest uninterrupted waterfall at 979 meters.',
@@ -237,7 +281,9 @@ export const countries: Country[] = [
   {
     iso: 'GY',
     name: 'Guyana',
+    nameEs: 'Guyana',
     capital: 'Georgetown',
+    capitalEs: 'Georgetown',
     coordinates: [6.80, -58.16],
     region: 'south-america',
     funFact: 'Guyana is the only English-speaking country in South America.',
@@ -246,7 +292,9 @@ export const countries: Country[] = [
   {
     iso: 'SR',
     name: 'Suriname',
+    nameEs: 'Surinam',
     capital: 'Paramaribo',
+    capitalEs: 'Paramaribo',
     coordinates: [5.85, -55.17],
     region: 'south-america',
     funFact: 'Suriname is the smallest country in South America and has Dutch as its official language.',
@@ -255,7 +303,9 @@ export const countries: Country[] = [
   {
     iso: 'BR',
     name: 'Brazil',
+    nameEs: 'Brasil',
     capital: 'Brasília',
+    capitalEs: 'Brasilia',
     coordinates: [-15.79, -47.88],
     region: 'south-america',
     funFact: 'Brazil is the only country to have won the FIFA World Cup five times.',
@@ -264,7 +314,9 @@ export const countries: Country[] = [
   {
     iso: 'EC',
     name: 'Ecuador',
+    nameEs: 'Ecuador',
     capital: 'Quito',
+    capitalEs: 'Quito',
     coordinates: [-0.18, -78.47],
     region: 'south-america',
     funFact: 'Quito is the highest official capital city in the world at 2,850 meters above sea level.',
@@ -273,7 +325,9 @@ export const countries: Country[] = [
   {
     iso: 'PE',
     name: 'Peru',
+    nameEs: 'Perú',
     capital: 'Lima',
+    capitalEs: 'Lima',
     coordinates: [-12.05, -77.04],
     region: 'south-america',
     funFact: 'Peru is home to Machu Picchu, one of the New Seven Wonders of the World.',
@@ -282,7 +336,9 @@ export const countries: Country[] = [
   {
     iso: 'BO',
     name: 'Bolivia',
+    nameEs: 'Bolivia',
     capital: 'Sucre',
+    capitalEs: 'Sucre',
     coordinates: [-19.03, -65.26],
     region: 'south-america',
     funFact: 'Bolivia has two capital cities: Sucre (constitutional) and La Paz (administrative).',
@@ -291,7 +347,9 @@ export const countries: Country[] = [
   {
     iso: 'PY',
     name: 'Paraguay',
+    nameEs: 'Paraguay',
     capital: 'Asunción',
+    capitalEs: 'Asunción',
     coordinates: [-25.26, -57.58],
     region: 'south-america',
     funFact: 'Paraguay is one of only two landlocked countries in South America, alongside Bolivia.',
@@ -300,7 +358,9 @@ export const countries: Country[] = [
   {
     iso: 'UY',
     name: 'Uruguay',
+    nameEs: 'Uruguay',
     capital: 'Montevideo',
+    capitalEs: 'Montevideo',
     coordinates: [-34.90, -56.16],
     region: 'south-america',
     funFact: 'Uruguay was the first country to fully legalize cannabis for recreational use nationwide.',
@@ -309,7 +369,9 @@ export const countries: Country[] = [
   {
     iso: 'AR',
     name: 'Argentina',
+    nameEs: 'Argentina',
     capital: 'Buenos Aires',
+    capitalEs: 'Buenos Aires',
     coordinates: [-34.60, -58.38],
     region: 'south-america',
     funFact: 'Argentina is home to Aconcagua, the highest peak outside of Asia at 6,961 meters.',
@@ -318,7 +380,9 @@ export const countries: Country[] = [
   {
     iso: 'CL',
     name: 'Chile',
+    nameEs: 'Chile',
     capital: 'Santiago',
+    capitalEs: 'Santiago',
     coordinates: [-33.44, -70.67],
     region: 'south-america',
     funFact: 'Chile is the longest north-south country in the world, stretching over 4,300 km.',
@@ -331,7 +395,9 @@ export const territories: Country[] = [
   {
     iso: 'PR',
     name: 'Puerto Rico',
+    nameEs: 'Puerto Rico',
     capital: 'San Juan',
+    capitalEs: 'San Juan',
     coordinates: [18.22, -66.59],
     region: 'caribbean',
     funFact: 'Puerto Rico\'s Arecibo Observatory once housed the world\'s largest radio telescope.',
@@ -341,7 +407,9 @@ export const territories: Country[] = [
   {
     iso: 'GL',
     name: 'Greenland',
+    nameEs: 'Groenlandia',
     capital: 'Nuuk',
+    capitalEs: 'Nuuk',
     coordinates: [64.18, -51.69],
     region: 'north-america',
     funFact: 'Greenland is the world\'s largest island, with 80% of its surface covered by ice.',
@@ -351,7 +419,9 @@ export const territories: Country[] = [
   {
     iso: 'GF',
     name: 'French Guiana',
+    nameEs: 'Guayana Francesa',
     capital: 'Cayenne',
+    capitalEs: 'Cayena',
     coordinates: [4.94, -52.33],
     region: 'south-america',
     funFact: 'French Guiana hosts the European Space Agency\'s primary spaceport, the Guiana Space Centre.',
@@ -361,7 +431,9 @@ export const territories: Country[] = [
   {
     iso: 'AW',
     name: 'Aruba',
+    nameEs: 'Aruba',
     capital: 'Oranjestad',
+    capitalEs: 'Oranjestad',
     coordinates: [12.52, -70.03],
     region: 'caribbean',
     funFact: 'Aruba is famous for its white-sand beaches and constant warm, dry climate.',
@@ -371,7 +443,9 @@ export const territories: Country[] = [
   {
     iso: 'CW',
     name: 'Curaçao',
+    nameEs: 'Curazao',
     capital: 'Willemstad',
+    capitalEs: 'Willemstad',
     coordinates: [12.12, -68.88],
     region: 'caribbean',
     funFact: 'Willemstad\'s historic center is a UNESCO World Heritage site with colorful colonial architecture.',

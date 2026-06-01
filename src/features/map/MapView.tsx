@@ -7,6 +7,7 @@ import geojsonRaw from '../../data/americas-110m.geojson?raw';
 import { allCountries } from '../../data/countries';
 import { useAppStore } from '../../store';
 import type { Region, QuizMode } from '../../types';
+import { getCountryNames, type Language } from '../../i18n';
 import { Legend } from './Legend';
 
 const LIGHT_TILE_URL = 'https://{s}.basemaps.cartocdn.com/light_nolabels/{z}/{x}/{y}{r}.png';
@@ -34,8 +35,9 @@ function getRegionForIso(iso: string): Region | null {
   return COUNTRY_BY_ISO.get(iso)?.region ?? null;
 }
 
-function getCountryName(iso: string): string {
-  return COUNTRY_BY_ISO.get(iso)?.name ?? iso;
+function getCountryName(iso: string, lang: Language = 'en'): string {
+  const c = COUNTRY_BY_ISO.get(iso);
+  return c ? getCountryNames(c, lang).name : iso;
 }
 
 function isTinyIsland(feature: Feature<Geometry>): boolean {
@@ -58,7 +60,6 @@ function FlyToController({ targetIso, mode }: { targetIso: string | null; mode: 
   return null;
 }
 
-/* Circle markers for tiny islands */
 function TinyIslandMarkers({
   data,
   showTooltips,
@@ -77,6 +78,7 @@ function TinyIslandMarkers({
 
       const storeTheme = useAppStore.getState().theme;
       const outlineColor = storeTheme === 'dark' ? '#ffffff' : '#1e293b';
+      const lang = useAppStore.getState().language;
 
       data.features.forEach((feature) => {
         if (!isTinyIsland(feature)) return;
@@ -98,7 +100,7 @@ function TinyIslandMarkers({
           useAppStore.getState().onCountryClick(iso);
         });
         if (showTooltips) {
-          marker.bindTooltip(getCountryName(iso), {
+          marker.bindTooltip(getCountryName(iso, lang), {
             direction: 'top',
             className:
               'bg-white text-slate-900 text-xs font-semibold px-2 py-1 rounded shadow-lg border-0 dark:bg-slate-900 dark:text-white',
@@ -115,7 +117,7 @@ function TinyIslandMarkers({
       map.off('zoomend', update);
       markersRef.current.forEach((m) => map.removeLayer(m));
     };
-  }, [map, data]);
+  }, [map, data, showTooltips]);
 
   return null;
 }
@@ -133,9 +135,15 @@ export default function MapView({ mode = 'study' }: MapViewProps) {
   const onCountryClick = useAppStore((s) => s.onCountryClick);
   const phase = useAppStore((s) => s.phase);
   const theme = useAppStore((s) => s.theme);
+  const language = useAppStore((s) => s.language);
 
   const isQuestionActive = phase === 'question';
   const isStudy = mode === 'study';
+
+  const getCountryNameWithLang = useCallback(
+    (iso: string) => getCountryName(iso, language),
+    [language]
+  );
 
   const getStyle = useCallback(
     (iso: string, isHovered: boolean) => {
@@ -189,7 +197,7 @@ export default function MapView({ mode = 'study' }: MapViewProps) {
     (feature: Feature<Geometry>, layer: L.Layer) => {
       const props = feature.properties as Record<string, string> | undefined;
       const iso = props?.ISO_A2 ?? '';
-      const name = getCountryName(iso);
+      const name = getCountryNameWithLang(iso);
 
       layer.on({
         mouseover: () => {
@@ -225,7 +233,7 @@ export default function MapView({ mode = 'study' }: MapViewProps) {
         });
       }
     },
-    [onCountryClick, getStyle]
+    [onCountryClick, getCountryNameWithLang, isStudy]
   );
 
   return (
@@ -244,31 +252,35 @@ export default function MapView({ mode = 'study' }: MapViewProps) {
           url={theme === 'dark' ? DARK_TILE_URL : LIGHT_TILE_URL}
         />
 
-        {allCountries.map((c) => (
-          <CircleMarker
-            key={`capital-${c.iso}`}
-            center={c.coordinates}
-            radius={3}
-            bubblingMouseEvents={false}
-            interactive={!isQuestionActive}
-            pathOptions={{
-              fillColor: REGION_COLORS[c.region],
-              color: theme === 'dark' ? '#ffffff' : '#1e293b',
-              weight: 1,
-              fillOpacity: 0.9,
-            }}
-          >
-            {isStudy && (
-              <Popup>
-                <strong>{c.name}</strong>
-                <br />
-                {c.capital}
-              </Popup>
-            )}
-          </CircleMarker>
-        ))}
+        {allCountries.map((c) => {
+          const names = getCountryNames(c, language);
+          return (
+            <CircleMarker
+              key={`capital-${c.iso}`}
+              center={c.coordinates}
+              radius={3}
+              bubblingMouseEvents={false}
+              interactive={!isQuestionActive}
+              pathOptions={{
+                fillColor: REGION_COLORS[c.region],
+                color: theme === 'dark' ? '#ffffff' : '#1e293b',
+                weight: 1,
+                fillOpacity: 0.9,
+              }}
+            >
+              {isStudy && (
+                <Popup>
+                  <strong>{names.name}</strong>
+                  <br />
+                  {names.capital}
+                </Popup>
+              )}
+            </CircleMarker>
+          );
+        })}
 
         <GeoJSON
+          key={`americas-${language}`}
           data={americasGeoJson}
           style={(feature) => {
             const props = (feature?.properties ?? {}) as Record<string, string>;

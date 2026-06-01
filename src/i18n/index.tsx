@@ -1,12 +1,14 @@
 import { createContext, useContext, useMemo, useCallback, type ReactNode } from 'react';
 import { useAppStore } from '../store';
 import type { Language, TranslationSection } from './types';
+import { getCountryNames } from './helpers';
 import { allCountries } from '../data/countries';
 import type { Question } from '../types';
 import es from './es.json';
 import en from './en.json';
 
 export type { Language } from './types';
+export { getCountryNames } from './helpers';
 
 const translations: Record<Language, TranslationSection> = { es: es as TranslationSection, en: en as TranslationSection };
 
@@ -47,20 +49,19 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
 
   const getPrompt = useCallback((question: Question) => {
     const country = allCountries.find((c) => c.iso === question.iso);
-    const name = country?.name ?? question.iso;
-    const capital = country?.capital ?? '';
+    const names = country ? getCountryNames(country, language) : { name: question.iso, capital: '' };
 
     switch (question.type) {
       case 'click-on-map':
-        return t('quiz.clickOn', { country: name });
+        return t('quiz.clickOn', { country: names.name });
       case 'text-input':
-        return t('quiz.whatCapital', { country: name });
+        return t('quiz.whatCapital', { country: names.name });
       case 'multiple-choice':
-        return t('quiz.whichCountryCapital', { capital });
+        return t('quiz.whichCountryCapital', { capital: names.capital });
       default:
         return question.prompt;
     }
-  }, [t]);
+  }, [t, language]);
 
   const value = useMemo<TranslationContextValue>(() => ({
     language,
