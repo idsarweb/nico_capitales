@@ -10,6 +10,14 @@ import type { QuestionType } from '../../types';
 
 const ALL_TYPES: QuestionType[] = ['click-on-map', 'text-input', 'multiple-choice'];
 
+function maskText(text: string, maskWords: string[]): string {
+  return maskWords.reduce((acc, word) => {
+    const escaped = word.replace(/[-/\\^$*+?.()|[\]{}]/g, '\\$&');
+    const regex = new RegExp(escaped, 'gi');
+    return acc.replace(regex, '*****');
+  }, text);
+}
+
 export default function PracticePage() {
   const { t, getPrompt, language } = useTranslation();
   const { startQuiz, phase, currentIndex, questions, answers, nextQuestion, skipQuestion, questionTypes, setQuestionTypes, resetQuiz } =
@@ -137,26 +145,29 @@ export default function PracticePage() {
           )}
         </div>
 
-        <AnimatePresence>
-          {showHint && hint && (
-            <motion.div
-              initial={{ opacity: 0, height: 0, scale: 0.95 }}
-              animate={{ opacity: 1, height: 'auto', scale: 1 }}
-              exit={{ opacity: 0, height: 0, scale: 0.95 }}
-              transition={{ type: 'spring', stiffness: 300, damping: 24 }}
-              className="mt-3 overflow-hidden rounded-xl border border-slate-200/50 bg-white/90 p-4 shadow-lg backdrop-blur-xl dark:border-white/10 dark:bg-slate-800/90"
-            >
-              <p className="text-xs text-slate-500 dark:text-slate-400">
-                {t('study.region')}: <span className="font-medium text-slate-700 dark:text-slate-200">
-                  {hint.region.replace(/-/g, ' ').replace(/\b\w/g, (l) => l.toUpperCase())}
-                </span>
-              </p>
-              <p className="mt-2 text-xs leading-relaxed text-slate-600 dark:text-slate-300">
-                {(language === 'es' && hint.funFactEs) ? hint.funFactEs : hint.funFact}
-              </p>
-            </motion.div>
-          )}
-        </AnimatePresence>
+      <AnimatePresence>
+        {showHint && hint && (
+          <motion.div
+            initial={{ opacity: 0, height: 0, scale: 0.95 }}
+            animate={{ opacity: 1, height: 'auto', scale: 1 }}
+            exit={{ opacity: 0, height: 0, scale: 0.95 }}
+            transition={{ type: 'spring', stiffness: 300, damping: 24 }}
+            className="mt-3 overflow-hidden rounded-xl border border-slate-200/50 bg-white/90 p-4 shadow-lg backdrop-blur-xl dark:border-white/10 dark:bg-slate-800/90"
+          >
+            <p className="text-xs text-slate-500 dark:text-slate-400">
+              {t('study.region')}: <span className="font-medium text-slate-700 dark:text-slate-200">
+                {hint.region.replace(/-/g, ' ').replace(/\b\w/g, (l) => l.toUpperCase())}
+              </span>
+            </p>
+            <p className="mt-2 text-xs leading-relaxed text-slate-600 dark:text-slate-300">
+              {(() => {
+                const raw = (language === 'es' && hint.funFactEs) ? hint.funFactEs : hint.funFact;
+                return maskText(raw, [hint.name, hint.capital]);
+              })()}
+            </p>
+          </motion.div>
+        )}
+      </AnimatePresence>
       </div>
 
       {/* Content area */}
