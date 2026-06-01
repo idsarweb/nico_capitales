@@ -22,7 +22,7 @@ export function Legend() {
   );
 
   return (
-    <div className="absolute bottom-4 left-4 z-[999] rounded-xl border border-white/10 bg-slate-800/80 px-4 py-3 shadow-lg backdrop-blur-sm">
+    <div className="absolute bottom-8 left-4 z-[999] rounded-xl border border-white/10 bg-slate-800/80 px-4 py-3 shadow-lg backdrop-blur-sm">
       <h3 className="mb-2 text-xs font-bold uppercase tracking-wider text-slate-300">
         {t('map.regions')}
       </h3>

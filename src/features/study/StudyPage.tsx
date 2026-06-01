@@ -35,7 +35,7 @@ export default function StudyPage() {
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 20, scale: 0.98 }}
             transition={{ type: 'spring', stiffness: 300, damping: 24 }}
-            className="absolute bottom-6 left-1/2 z-[1000] w-[90%] max-w-md -translate-x-1/2 rounded-2xl border border-slate-200/50 bg-white/90 p-5 shadow-2xl backdrop-blur-xl dark:border-white/10 dark:bg-slate-800/90"
+            className="absolute bottom-10 left-1/2 z-[1000] w-[90%] max-w-md -translate-x-1/2 rounded-2xl border border-slate-200/50 bg-white/90 p-5 shadow-2xl backdrop-blur-xl dark:border-white/10 dark:bg-slate-800/90"
           >
             <div className="flex items-start gap-4">
               <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-rose-400 to-orange-500 text-xl shadow">
