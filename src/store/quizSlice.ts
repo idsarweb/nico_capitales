@@ -196,11 +196,12 @@ export const createQuizSlice: StateCreator<QuizSlice, [], [], QuizSlice> = (set,
   },
 
   onCountryClick: (iso: string) => {
-    const { phase, mode } = get();
+    const { phase, mode, selectedCountry } = get();
     if (phase === 'question' || (mode === 'practice' && phase === 'wrong')) {
       get().answerQuestion(iso);
     } else if (phase !== 'wrong') {
-      set({ selectedCountry: iso });
+      // Toggle: if already selected, deselect
+      set({ selectedCountry: selectedCountry === iso ? null : iso });
     }
   },
 });
