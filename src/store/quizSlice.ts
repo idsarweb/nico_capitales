@@ -44,7 +44,7 @@ function buildQuestions(pool: Country[], count: number, enabledTypes?: QuestionT
       const distractors = shuffled
         .filter((x) => x.iso !== c.iso)
         .sort(() => Math.random() - 0.5)
-        .slice(0, 3);
+        .slice(0, 5);
       options = [c.name, ...distractors.map((d) => d.name)].sort(() => Math.random() - 0.5);
     }
 

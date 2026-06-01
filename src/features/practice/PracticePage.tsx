@@ -146,10 +146,6 @@ export default function PracticePage() {
               transition={{ type: 'spring', stiffness: 300, damping: 24 }}
               className="mt-3 overflow-hidden rounded-xl border border-slate-200/50 bg-white/90 p-4 shadow-lg backdrop-blur-xl dark:border-white/10 dark:bg-slate-800/90"
             >
-              <h4 className="text-sm font-bold text-slate-800 dark:text-white">{hint.name}</h4>
-              <p className="mt-1 text-xs text-slate-500 dark:text-slate-400">
-                {t('study.capital')}: <span className="font-medium text-slate-700 dark:text-slate-200">{hint.capital}</span>
-              </p>
               <p className="text-xs text-slate-500 dark:text-slate-400">
                 {t('study.region')}: <span className="font-medium text-slate-700 dark:text-slate-200">
                   {hint.region.replace(/-/g, ' ').replace(/\b\w/g, (l) => l.toUpperCase())}
