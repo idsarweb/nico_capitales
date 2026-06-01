@@ -1,6 +1,6 @@
 import React from 'react';
 import {
-  BrowserRouter,
+  HashRouter,
   Routes,
   Route,
   Navigate,
@@ -186,8 +186,8 @@ export default function App() {
   }
 
   return (
-    <BrowserRouter>
+    <HashRouter>
       <Layout />
-    </BrowserRouter>
+    </HashRouter>
   );
 }
