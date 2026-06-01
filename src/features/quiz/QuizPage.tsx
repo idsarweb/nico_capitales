@@ -24,6 +24,7 @@ export default function QuizPage() {
     recordAnswers,
     addHighScore,
     skipQuestion,
+    nextQuestion,
     questionTypes,
     setQuestionTypes,
   } = useAppStore();
@@ -73,6 +74,16 @@ export default function QuizPage() {
       timer.pause();
     }
   }, [phase, currentIndex, timer]);
+
+  // Auto-advance on correct answers
+  useEffect(() => {
+    if (phase === 'correct') {
+      const t = setTimeout(() => {
+        nextQuestion();
+      }, 1200);
+      return () => clearTimeout(t);
+    }
+  }, [phase, nextQuestion]);
 
   useEffect(() => {
     if (phase === 'complete') {

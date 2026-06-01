@@ -217,7 +217,7 @@ export default function PracticePage() {
             </motion.div>
           )}
 
-          {currentQuestion && (
+          {currentQuestion && phase !== 'complete' && (
             <motion.div
               key={currentQuestion.id}
               initial={{ opacity: 0, x: 20 }}
