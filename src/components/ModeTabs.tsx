@@ -9,14 +9,12 @@ export default function ModeTabs() {
   const { t } = useTranslation();
   const mode = useAppStore((s) => s.mode);
   const phase = useAppStore((s) => s.phase);
-  const resetQuiz = useAppStore((s) => s.resetQuiz);
 
   const isQuizActive = mode === 'quiz' && phase !== 'idle';
 
   const handleNav = (to: string) => {
-    if (isQuizActive) {
-      resetQuiz();
-    }
+    // Block navigation away when quiz is active
+    if (isQuizActive && to !== '/quiz') return;
     navigate(to);
   };
 
@@ -32,14 +30,18 @@ export default function ModeTabs() {
     >
       {TABS.map((tab) => {
         const active = pathname.startsWith(tab.path);
+        const blocked = isQuizActive && tab.path !== '/quiz';
         return (
           <button
             key={tab.path}
             onClick={() => handleNav(tab.path)}
+            disabled={blocked}
             className={`relative rounded-lg px-4 py-2 text-sm font-semibold transition ${
               active
                 ? 'text-white'
-                : 'text-slate-400 hover:text-slate-200'
+                : blocked
+                  ? 'cursor-not-allowed text-slate-600 opacity-50'
+                  : 'text-slate-400 hover:text-slate-200'
             }`}
           >
             {active && (
