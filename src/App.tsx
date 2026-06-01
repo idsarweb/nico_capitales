@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React from 'react';
 import {
   BrowserRouter,
   Routes,
@@ -29,83 +29,6 @@ function PageTransition({ children }: { children: React.ReactNode }) {
       className="h-full w-full"
     >
       {children}
-    </motion.div>
-  );
-}
-
-function ResumeModal() {
-  const location = useLocation();
-  const { t } = useTranslation();
-  const { phase, resetQuiz, questions } = useAppStore();
-  const [open, setOpen] = useState(false);
-  const hasShownRef = useRef(false);
-
-  useEffect(() => {
-    // Reset when leaving /quiz
-    if (location.pathname !== '/quiz') {
-      hasShownRef.current = false;
-      setOpen(false);
-      return;
-    }
-    // Only show once per visit to /quiz with an active session
-    if (hasShownRef.current) return;
-    if (phase !== 'idle' && phase !== 'complete' && questions.length > 0) {
-      setOpen(true);
-      hasShownRef.current = true;
-    }
-  }, [phase, questions.length, location.pathname]);
-
-  if (!open) return null;
-
-  const handleDismiss = () => {
-    hasShownRef.current = true;
-    setOpen(false);
-  };
-
-  const handleRestart = () => {
-    hasShownRef.current = true;
-    resetQuiz();
-    setOpen(false);
-    // Don't navigate — QuizPage will start a fresh quiz automatically
-  };
-
-  return (
-    <motion.div
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      className="fixed inset-0 z-[2000] flex items-center justify-center bg-black/50 p-4"
-    >
-      <motion.div
-        initial={{ scale: 0.9, opacity: 0 }}
-        animate={{ scale: 1, opacity: 1 }}
-        className="w-full max-w-sm rounded-2xl border border-slate-200 bg-white p-6 shadow-2xl dark:border-white/10 dark:bg-slate-900"
-      >
-        <h3 className="text-lg font-bold text-slate-800 dark:text-slate-100"
-        >
-          {t('quiz.unfinishedQuiz')}
-        </h3>
-        <p className="mt-2 text-sm text-slate-500 dark:text-slate-400"
-        >
-          {t('quiz.incompleteQuiz').replace('{current}', String(useAppStore.getState().currentIndex + 1)).replace('{total}', String(questions.length))}
-        </p>
-        <div className="mt-4 flex gap-3"
-        >
-          <button
-            type="button"
-            onClick={handleDismiss}
-            className="flex-1 rounded-xl bg-indigo-600 py-2.5 text-sm font-bold text-white transition hover:bg-indigo-700"
-          >
-            {t('quiz.resume')}
-          </button>
-          <button
-            type="button"
-            onClick={handleRestart}
-            className="flex-1 rounded-xl border border-slate-300 bg-slate-100 py-2.5 text-sm font-bold text-slate-700 transition hover:bg-slate-200 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-200 dark:hover:bg-slate-700"
-          >
-            {t('quiz.restart')}
-          </button>
-        </div>
-      </motion.div>
     </motion.div>
   );
 }
@@ -236,7 +159,6 @@ function Layout() {
         </AnimatePresence>
       </main>
 
-      <ResumeModal />
     </div>
   );
 }
