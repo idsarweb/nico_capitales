@@ -6,9 +6,16 @@ import { allCountries } from '../../data/countries';
 import ClickOnMap from '../quiz/question-types/ClickOnMap';
 import TextInput from '../quiz/question-types/TextInput';
 import MultipleChoice from '../quiz/question-types/MultipleChoice';
-import type { QuestionType } from '../../types';
+import type { QuestionType, Region } from '../../types';
 
 const ALL_TYPES: QuestionType[] = ['click-on-map', 'text-input', 'multiple-choice'];
+
+const REGION_LABEL_KEY: Record<Region, string> = {
+  'north-america': 'map.northAmerica',
+  'central-america': 'map.centralAmerica',
+  caribbean: 'map.caribbean',
+  'south-america': 'map.southAmerica',
+};
 
 function maskText(text: string, maskWords: string[]): string {
   const allTerms = new Set<string>();
@@ -186,7 +193,7 @@ export default function PracticePage() {
           >
             <p className="text-xs text-slate-500 dark:text-slate-400">
               {t('study.region')}: <span className="font-medium text-slate-700 dark:text-slate-200">
-                {t(`map.${hint.region}` as const)}
+                {t(REGION_LABEL_KEY[hint.region])}
               </span>
             </p>
             <p className="mt-2 text-xs leading-relaxed text-slate-600 dark:text-slate-300">

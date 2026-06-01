@@ -5,6 +5,14 @@ import { useTranslation, getCountryNames } from '../../i18n';
 import { allCountries } from '../../data/countries';
 import MapView from '../map/MapView';
 import CountryList from '../../components/CountryList';
+import type { Region } from '../../types';
+
+const REGION_LABEL_KEY: Record<Region, string> = {
+  'north-america': 'map.northAmerica',
+  'central-america': 'map.centralAmerica',
+  caribbean: 'map.caribbean',
+  'south-america': 'map.southAmerica',
+};
 
 export default function StudyPage() {
   const { t, language } = useTranslation();
@@ -52,7 +60,7 @@ export default function StudyPage() {
                 </p>
                 <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">
                   {t('study.region')}: <span className="font-medium text-slate-700 dark:text-slate-200">
-                    {t(`map.${country.region}` as const)}
+                    {t(REGION_LABEL_KEY[country.region])}
                   </span>
                 </p>
                 <p className="mt-3 text-sm leading-relaxed text-slate-600 dark:text-slate-300">
