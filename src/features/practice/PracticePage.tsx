@@ -11,7 +11,7 @@ import type { QuestionType } from '../../types';
 const ALL_TYPES: QuestionType[] = ['click-on-map', 'text-input', 'multiple-choice'];
 
 export default function PracticePage() {
-  const { t, getPrompt } = useTranslation();
+  const { t, getPrompt, language } = useTranslation();
   const { startQuiz, phase, currentIndex, questions, answers, nextQuestion, skipQuestion, questionTypes, setQuestionTypes, resetQuiz } =
     useAppStore();
 
@@ -77,9 +77,7 @@ export default function PracticePage() {
 
   const hint = useMemo(() => {
     if (!currentQuestion) return null;
-    const country = allCountries.find((c) => c.iso === currentQuestion.iso);
-    if (!country) return null;
-    return `Region: ${country.region.replace(/-/g, ' ')}`;
+    return allCountries.find((c) => c.iso === currentQuestion.iso) ?? null;
   }, [currentQuestion]);
 
   const progress = questions.length > 0 ? Math.round(((currentIndex + (phase === 'idle' ? 0 : 1)) / questions.length) * 100) : 0;
@@ -141,14 +139,26 @@ export default function PracticePage() {
 
         <AnimatePresence>
           {showHint && hint && (
-            <motion.p
-              initial={{ opacity: 0, height: 0 }}
-              animate={{ opacity: 1, height: 'auto' }}
-              exit={{ opacity: 0, height: 0 }}
-              className="mt-2 text-sm text-teal-300"
+            <motion.div
+              initial={{ opacity: 0, height: 0, scale: 0.95 }}
+              animate={{ opacity: 1, height: 'auto', scale: 1 }}
+              exit={{ opacity: 0, height: 0, scale: 0.95 }}
+              transition={{ type: 'spring', stiffness: 300, damping: 24 }}
+              className="mt-3 overflow-hidden rounded-xl border border-slate-200/50 bg-white/90 p-4 shadow-lg backdrop-blur-xl dark:border-white/10 dark:bg-slate-800/90"
             >
-              {hint}
-            </motion.p>
+              <h4 className="text-sm font-bold text-slate-800 dark:text-white">{hint.name}</h4>
+              <p className="mt-1 text-xs text-slate-500 dark:text-slate-400">
+                {t('study.capital')}: <span className="font-medium text-slate-700 dark:text-slate-200">{hint.capital}</span>
+              </p>
+              <p className="text-xs text-slate-500 dark:text-slate-400">
+                {t('study.region')}: <span className="font-medium text-slate-700 dark:text-slate-200">
+                  {hint.region.replace(/-/g, ' ').replace(/\b\w/g, (l) => l.toUpperCase())}
+                </span>
+              </p>
+              <p className="mt-2 text-xs leading-relaxed text-slate-600 dark:text-slate-300">
+                {(language === 'es' && hint.funFactEs) ? hint.funFactEs : hint.funFact}
+              </p>
+            </motion.div>
           )}
         </AnimatePresence>
       </div>
