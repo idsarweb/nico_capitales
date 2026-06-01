@@ -9,12 +9,19 @@ export default function ModeTabs() {
   const { t } = useTranslation();
   const mode = useAppStore((s) => s.mode);
   const phase = useAppStore((s) => s.phase);
+  const resetQuiz = useAppStore((s) => s.resetQuiz);
 
   const isQuizActive = mode === 'quiz' && phase !== 'idle';
 
   const handleNav = (to: string) => {
     // Block navigation away when quiz is active
     if (isQuizActive && to !== '/quiz') return;
+
+    // Reset when navigating to Quiz from another mode
+    if (to === '/quiz' && !isQuizActive) {
+      resetQuiz();
+    }
+
     navigate(to);
   };
 
