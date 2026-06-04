@@ -6,55 +6,11 @@ import { allCountries } from '../../data/countries';
 import ClickOnMap from '../quiz/question-types/ClickOnMap';
 import TextInput from '../quiz/question-types/TextInput';
 import MultipleChoice from '../quiz/question-types/MultipleChoice';
-import type { QuestionType, Region } from '../../types';
+import { REGION_LABEL_KEY } from '../../utils/regionLabels';
+import { maskText } from '../../utils/maskText';
+import type { QuestionType } from '../../types';
 
 const ALL_TYPES: QuestionType[] = ['click-on-map', 'text-input', 'multiple-choice'];
-
-const REGION_LABEL_KEY: Record<Region, string> = {
-  'north-america': 'map.northAmerica',
-  'central-america': 'map.centralAmerica',
-  caribbean: 'map.caribbean',
-  'south-america': 'map.southAmerica',
-};
-
-function maskText(text: string, maskWords: string[]): string {
-  const allTerms = new Set<string>();
-
-  for (const word of maskWords) {
-    if (!word) continue;
-    allTerms.add(word);
-
-    // Variantes sin artículo y con artículos en ambos idiomas
-    const withoutArticle = word.replace(/^(The|Las|Los|La|El)\s+/i, '');
-    if (withoutArticle !== word) {
-      ['', 'The ', 'Las ', 'Los ', 'La ', 'El '].forEach((prefix) => allTerms.add(prefix + withoutArticle));
-    }
-
-    // Primera palabra (para "Mexico City", buscar solo "Mexico")
-    if (word.includes(' ')) {
-      const first = word.split(' ')[0];
-      if (first.length > 3) allTerms.add(first);
-    }
-
-    // Parte antes de coma (para "Washington, D.C.")
-    if (word.includes(',')) {
-      allTerms.add(word.split(',')[0]);
-    }
-  }
-
-  // Ordenar de más largo a más corto para evitar reemplazos parciales
-  const sorted = Array.from(allTerms)
-    .filter((t) => t.length >= 2)
-    .sort((a, b) => b.length - a.length);
-
-  let result = text;
-  for (const term of sorted) {
-    const escaped = term.replace(/[-/\\^$*+?.()|[\]{}]/g, '\\$&');
-    result = result.replace(new RegExp(escaped, 'gi'), '*****');
-  }
-
-  return result;
-}
 
 export default function PracticePage() {
   const { t, getPrompt, language } = useTranslation();
@@ -257,6 +213,7 @@ export default function PracticePage() {
                     max={maxQuestions}
                     value={questionCount}
                     onChange={(e) => setQuestionCount(Math.min(maxQuestions, Math.max(1, Number(e.target.value))))}
+                    aria-label={t('quiz.questionCount')}
                     className="w-20 rounded-lg border border-slate-300 bg-white px-3 py-1.5 text-center text-sm font-semibold text-slate-800 dark:border-slate-600 dark:bg-slate-700 dark:text-slate-100"
                   />
                 </div>

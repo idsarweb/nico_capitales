@@ -225,6 +225,7 @@ export default function QuizPage() {
                     max={maxQuestions}
                     value={questionCount}
                     onChange={(e) => setQuestionCount(Math.min(maxQuestions, Math.max(1, Number(e.target.value))))}
+                    aria-label={t('quiz.questionCount')}
                     className="w-20 rounded-lg border border-slate-300 bg-white px-3 py-1.5 text-center text-sm font-semibold text-slate-800 dark:border-slate-600 dark:bg-slate-700 dark:text-slate-100"
                   />
                 </div>

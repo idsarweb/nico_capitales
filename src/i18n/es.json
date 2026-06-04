@@ -30,6 +30,8 @@
     "restart": "Reiniciar",
     "unfinishedQuiz": "Quiz sin terminar",
     "loading": "Cargando...",
+    "noResults": "Sin resultados",
+    "noResultsDesc": "No hay resultados disponibles.",
     "points": "puntos",
     "timeRemaining": "Tiempo restante",
     "region": "Región: {region}",

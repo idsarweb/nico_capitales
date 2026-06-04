@@ -24,6 +24,8 @@ export default function ClickOnMap({ question }: { question: Question }) {
         <motion.div
           initial={{ opacity: 0, scale: 0.8 }}
           animate={{ opacity: 1, scale: 1 }}
+          role="status"
+          aria-live="polite"
           className="pointer-events-none absolute left-1/2 top-1/2 z-[1001] -translate-x-1/2 -translate-y-1/2 rounded-xl bg-emerald-500 px-6 py-3 text-lg font-bold text-white shadow-xl"
         >
           {t('quiz.correct')}
@@ -34,6 +36,8 @@ export default function ClickOnMap({ question }: { question: Question }) {
         <motion.div
           initial={{ opacity: 0, scale: 0.8 }}
           animate={{ opacity: 1, scale: 1 }}
+          role="status"
+          aria-live="polite"
           className="pointer-events-none absolute left-1/2 top-1/2 z-[1001] -translate-x-1/2 -translate-y-1/2 rounded-xl bg-rose-500 px-6 py-3 text-lg font-bold text-white shadow-xl"
         >
           {t('quiz.wrongAnswer', { answer: targetNames?.name ?? targetCountry?.name ?? '' })}

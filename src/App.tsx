@@ -1,11 +1,4 @@
-import React from 'react';
-import {
-  HashRouter,
-  Routes,
-  Route,
-  Navigate,
-  useLocation,
-} from 'react-router-dom';
+import { HashRouter, Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import { AnimatePresence, motion } from 'framer-motion';
 import { allCountries } from './data/countries';
 import { useAppStore } from './store';
@@ -163,22 +156,25 @@ function Layout() {
   );
 }
 
-function EmptyState() {
-  const { t } = useTranslation();
-  return (
-    <div className="flex h-screen flex-col items-center justify-center gap-4 px-4 text-center"
-    >
-      <h2 className="text-2xl font-bold text-slate-700 dark:text-slate-100"
+  function EmptyState() {
+    const { t } = useTranslation();
+    return (
+      <div
+        className="flex h-screen flex-col items-center justify-center gap-4 px-4 text-center"
+        role="alert"
+        aria-live="assertive"
       >
-        {t('quiz.noCountries')}
-      </h2>
-      <p className="text-slate-500 dark:text-slate-400"
-      >
-        The dataset appears to be empty. Please check your data source.
-      </p>
-    </div>
-  );
-}
+        <h2 className="text-2xl font-bold text-slate-700 dark:text-slate-100"
+        >
+          {t('quiz.noCountries')}
+        </h2>
+        <p className="text-slate-500 dark:text-slate-400"
+        >
+          {t('quiz.noResultsDesc')}
+        </p>
+      </div>
+    );
+  }
 
 export default function App() {
   if (allCountries.length === 0) {

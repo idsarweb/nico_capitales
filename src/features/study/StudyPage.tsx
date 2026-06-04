@@ -5,14 +5,7 @@ import { useTranslation, getCountryNames } from '../../i18n';
 import { allCountries } from '../../data/countries';
 import MapView from '../map/MapView';
 import CountryList from '../../components/CountryList';
-import type { Region } from '../../types';
-
-const REGION_LABEL_KEY: Record<Region, string> = {
-  'north-america': 'map.northAmerica',
-  'central-america': 'map.centralAmerica',
-  caribbean: 'map.caribbean',
-  'south-america': 'map.southAmerica',
-};
+import { REGION_LABEL_KEY } from '../../utils/regionLabels';
 
 export default function StudyPage() {
   const { t, language } = useTranslation();

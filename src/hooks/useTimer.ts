@@ -11,6 +11,8 @@ export function useTimer(totalMs: number, onExpire?: () => void) {
   const [isRunning, setIsRunning] = useState(false);
   const [isExpired, setIsExpired] = useState(false);
   const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
+  const startTimeRef = useRef<number | null>(null);
+  const pausedRemainingRef = useRef<number>(totalMs);
   const onExpireRef = useRef(onExpire);
   const hasExpiredRef = useRef(false);
 
@@ -18,38 +20,43 @@ export function useTimer(totalMs: number, onExpire?: () => void) {
     onExpireRef.current = onExpire;
   }, [onExpire]);
 
+  const tick = useCallback(() => {
+    const now = Date.now();
+    const elapsed = startTimeRef.current ? now - startTimeRef.current : 0;
+    const next = Math.max(0, pausedRemainingRef.current - elapsed);
+    setRemainingMs(Math.ceil(next));
+
+    if (next <= 0) {
+      if (intervalRef.current) {
+        clearInterval(intervalRef.current);
+        intervalRef.current = null;
+      }
+      setIsRunning(false);
+      setIsExpired(true);
+      if (!hasExpiredRef.current) {
+        hasExpiredRef.current = true;
+        onExpireRef.current?.();
+      }
+    }
+  }, []);
+
   const start = useCallback(() => {
     if (intervalRef.current) return;
     setIsRunning(true);
     setIsExpired(false);
     hasExpiredRef.current = false;
-
-    intervalRef.current = setInterval(() => {
-      setRemainingMs((prev) => {
-        const next = prev - 100;
-        if (next <= 0) {
-          if (intervalRef.current) {
-            clearInterval(intervalRef.current);
-            intervalRef.current = null;
-          }
-          setIsRunning(false);
-          setIsExpired(true);
-          if (!hasExpiredRef.current) {
-            hasExpiredRef.current = true;
-            onExpireRef.current?.();
-          }
-          return 0;
-        }
-        return next;
-      });
-    }, 100);
-  }, []);
+    startTimeRef.current = Date.now();
+    intervalRef.current = setInterval(tick, 32);
+  }, [tick]);
 
   const pause = useCallback(() => {
     if (intervalRef.current) {
       clearInterval(intervalRef.current);
       intervalRef.current = null;
     }
+    const now = Date.now();
+    const elapsed = startTimeRef.current ? now - startTimeRef.current : 0;
+    pausedRemainingRef.current = Math.max(0, pausedRemainingRef.current - elapsed);
     setIsRunning(false);
   }, []);
 
@@ -58,9 +65,12 @@ export function useTimer(totalMs: number, onExpire?: () => void) {
       clearInterval(intervalRef.current);
       intervalRef.current = null;
     }
+    startTimeRef.current = null;
+    pausedRemainingRef.current = totalMs;
     setRemainingMs(totalMs);
     setIsRunning(false);
     setIsExpired(false);
+    hasExpiredRef.current = false;
   }, [totalMs]);
 
   useEffect(() => {
